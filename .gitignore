@@ -1,0 +1,5 @@
+*.json
+.vscode/
+old_result/
+data/
+api_key.py
