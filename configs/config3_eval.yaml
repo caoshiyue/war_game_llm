@@ -1,6 +1,6 @@
 task: "Risk_preference_red_eval"
 model: "gpt-4o"
-max_workers: 4
+max_workers: 16
 request_interval: 1.0 # 请求间隔（秒）
 output_base: "./old_result/risk/results_v3_based"
 data_dir: "./data/results_overall_deepseek_v3"
