@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-13 08:16:09
+# LastEditTime: 2025-04-13 08:42:55
 ## 
 import os
 import asyncio
@@ -34,7 +34,7 @@ async def async_runner(models,configs,overwrite):
     ]
     
     # 使用信号量控制并发度（根据系统资源调整）
-    semaphore = asyncio.Semaphore(10)  # 同时最多运行4个任务
+    semaphore = asyncio.Semaphore(32)  # 同时最多运行4个任务
     
     async def sem_task(task):
         async with semaphore:
