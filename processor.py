@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-11 02:27:44
+# LastEditTime: 2025-04-13 08:23:20
 ## 
 import json
 import re
@@ -38,14 +38,14 @@ class DataProcessor:
                     self.model)
         os.makedirs(self.result_dir, exist_ok=True)
         self.field_config = config.get('data_processing', {})
-        self.content_field_path = self.field_config.get('content_field','').split('.')
+        self.content_field_path = self.field_config.get('content_field','').split('.')       
         self.extract_rules = [
             {
-                'name': rule['name'],
-                'pattern': re.compile(rule['pattern']),
+                'name': rule.get('name', ""),
+                'pattern': re.compile(rule.get('pattern',"")),
                 'required': rule.get('required', False)
             }
-            for rule in config['data_processing']['extract_fields']
+            for rule in config['data_processing'].get('extract_fields', []) or []
         ]
         self.lock = asyncio.Lock()
         
@@ -94,7 +94,7 @@ class DataProcessor:
             # API调用
             prompt = self._build_prompt(content)
             n_retry=0
-            while n_retry<3:
+            while n_retry<5:
                 try:
                     response = await openai_response(
                         model=self.config['model'],
@@ -263,35 +263,51 @@ class DataProcessor:
         lock_path = path + ".lock"
         with open(lock_path, 'w') as lock_file:
             try:
-                # 合并历史数据（如果需要）
-                # if os.path.exists(path):
-                #     with open(path, 'r', encoding='utf-8') as f:
-                #         existing = json.load(f)
-                #         summary['label'] = existing.get('label', []) + summary['label']
-                #         summary['meta'].update(existing['meta'])
-                
-                # 写入更新后数据
                 with open(path, 'w', encoding='utf-8') as f:
                     json.dump(summary, f, indent=2, ensure_ascii=False)
             finally:
                 os.remove(lock_path)
                 
-    async def run(self, file_list: list,overwrite=True):
-        """使用异步并发处理"""
+    async def run(self, file_list: list, overwrite=True):
+        """使用异步并发处理（增加进度显示）"""
         semaphore = asyncio.Semaphore(self.config['max_workers'])
+        total_files = len(file_list)
+        processed = 0  # 线程安全计数器
+        lock = asyncio.Lock()  # 异步锁保证计数原子性
+        
+        async def update_progress():
+            """原子操作更新进度"""
+            nonlocal processed
+            async with lock:
+                processed += 1
+                # 计算进度百分比
+                progress = processed / total_files * 100
+                # 实时覆盖显示进度（\r回车符实现）
+                print(f"\r {self.config['task']} {self.config['model']}处理进度: {processed}/{total_files} ({progress:.2f}%)", end="", flush=True)
         
         async def bounded_process(file_path):
             async with semaphore:
-                await self.process_file(file_path,overwrite)
+                try:
+                    await self.process_file(file_path, overwrite)
+                finally:
+                    await update_progress()  # 无论成功失败都更新进度
                 await asyncio.sleep(self.config['request_interval'])
+        
+        # 初始提示
+        print(f"开始处理 {total_files} 个文件，使用 {self.config['max_workers']} 并发...")
         
         tasks = [bounded_process(fp) for fp in file_list]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        # 处理异常结果
+        # 处理完成后换行
+        print("\n" + "="*40)
+        
+        # 异常处理（保持原有逻辑）
+        error_count = 0
         for result in results:
             if isinstance(result, Exception):
-                print(f"Task failed: {str(result)}")
+                error_count += 1
+                print(f"任务失败: {str(result)}")
         
         # 保存统计结果
         await self.generate_summary()

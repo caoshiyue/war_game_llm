@@ -46,7 +46,7 @@ def analyze_task_results(config_path):
                 break  # 每个文件只记录第一个达标的答案
 
     # 保存结果
-    output_path = f"extract_{task_name}.json"
+    output_path = f"extract/extract_{task_name}.json"
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(extract_data, f, indent=2, ensure_ascii=False)
 
@@ -54,5 +54,9 @@ def analyze_task_results(config_path):
 
 # 使用方式
 if __name__ == "__main__":
-    analyze_task_results("configs/config3.yaml")
-    analyze_task_results("configs/config4.yaml")
+    analyze_task_results("configs/config5.yaml")
+    analyze_task_results("configs/config6.yaml")
+    analyze_task_results("configs/config7.yaml")
+    analyze_task_results("configs/config8.yaml")
+    analyze_task_results("configs/config9.yaml")
+    analyze_task_results("configs/config10.yaml")

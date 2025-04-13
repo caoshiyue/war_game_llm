@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-11 02:31:47
+# LastEditTime: 2025-04-13 08:16:09
 ## 
 import os
 import asyncio
@@ -47,16 +47,16 @@ async def async_runner(models,configs,overwrite):
 # "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"
 
 if __name__ == "__main__":
-    models = [ "deepseek-v3", "deepseek-r1", "o3-mini", "qwen-max-latest"]
+    models = ["deepseek-v3", "deepseek-r1", "o1-mini", "qwen-max-latest"]
     configs = [
-        "configs/config5.yaml",
-        "configs/config6.yaml",
-        "configs/config7.yaml",
-        "configs/config8.yaml",
-        "configs/config9.yaml",
-        "configs/config10.yaml"
+        "configs/config11.yaml",
+        "configs/config12.yaml",
+        "configs/config13.yaml",
+        "configs/config14.yaml",
+        "configs/config15.yaml",
+        "configs/config16.yaml"
     ]
-    asyncio.run(async_runner(models,configs,overwrite=False))
+    asyncio.run(async_runner(models,configs,overwrite=True))
     #asyncio.run(single_process("gpt-4o","configs/config1.yaml"))
 
     
