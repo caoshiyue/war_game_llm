@@ -1,7 +1,7 @@
 task: "search_point2_red"
 model: "gpt-4o"
-max_workers: 8
-request_interval: 2.0 # 请求间隔（秒）
+max_workers: 16
+request_interval: 5.0 # 请求间隔（秒）
 output_base: "./search_psy/results_v3_based"
 data_dir: "./data/results_overall_deepseek_v3"
 api_params:
@@ -13,19 +13,19 @@ data_processing:
   "content_field_b": "analyze_0.chunks_results.0.content"  
   extract_fields:
     - name: "action_A"             # 新增字段
-      pattern: "<action_A>\[?(.*?)\]?</action_A>"
+      pattern: "<action_A>\\[?(.*?)\\]?</action_A>"
       required: false         # 不允许匹配失败
     - name: "step_A"             # 新增字段
-      pattern: "<step_A>\[?(.*?)\]?</step_A>"
+      pattern: "<step_A>\\[?(.*?)\\]?</step_A>"
       required: false         # 不允许匹配失败
     - name: "action_B"             # 新增字段
-      pattern: "<action_B>\[?(.*?)\]?</action_B>"
+      pattern: "<action_B>\\[?(.*?)\\]?</action_B>"
       required: false         # 不允许匹配失败
     - name: "step_B"             # 新增字段
-      pattern: "<step_B>\[?(.*?)\]?</step_B>"
+      pattern: "<step_B>\\[?(.*?)\\]?</step_B>"
       required: false         # 不允许匹配失败
 analysis:
-  min_consensus: 1
+  min_consensus: 2
   output_dir: "analysis_results/"  # 自定义输出目录
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中的两个玩家的战术复盘，包括玩家方单位的所有行动。"
 user_prompt_template: |
@@ -36,5 +36,5 @@ user_prompt_template: |
   {contentB}
 
   首先，分别分析复盘中玩家对哪些单位采取了哪些行动。
-  其次，请在这两局复盘中各寻找一个片段（明确时间步），要求两个片段都处于推演后期(1200-1600)，玩家方有一个已夺控点，还有一个未夺控点，但两个玩家的策略完全不同：其中一个玩家集中兵力守住已夺控的点，另一个玩家分散兵力一边防守一边进行进攻新夺控点。
+  其次，请在这两局复盘中各寻找一个片段（明确时间步），要求两个片段都处于推演后期(1200以后)，玩家方有一个已夺控点，还有一个未夺控点，但两个玩家的策略完全不同：其中一个玩家集中兵力守住已夺控的点，另一个玩家分散兵力一边防守一边进行进攻新夺控点。
   请给出分析过程，分析完成后，以"<action_A>[此处填充对局A的片段描述]</action_A> <step_A>[此处填充片段开始时间步-结束时间步]</step_A>; <action_B>[此处填充对局B片段描述]</action_B> <step_B>[此处填充片段开始时间步-结束时间步]</step_B>" 的格式复述该片段中的玩家行动(不要自行总结)，在回答最后用++A++或++B++说明对局A片段还是对局B片段的玩家分散兵力一边防守一边进行进攻新夺控点，如果两者都没有，回答++C++。

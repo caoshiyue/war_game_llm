@@ -1,9 +1,9 @@
 task: "search_tank_back_red"
 model: "gpt-4o"
-max_workers: 8
-request_interval: 2.0 # 请求间隔（秒）
+max_workers: 16
+request_interval: 5.0 # 请求间隔（秒）
 output_base: "./search_psy/results_v3_based"
-data_dir: "./data copy/results_overall_deepseek_v3"
+data_dir: "./data/results_overall_deepseek_v3"
 api_params:
   max_tokens: 8000
   temperature: 0.7
@@ -13,19 +13,19 @@ data_processing:
   "content_field_b": "analyze_0.chunks_results.0.content"  
   extract_fields:
     - name: "action_A"             # 新增字段
-      pattern: "<action_A>\[?(.*?)\]?</action_A>"
+      pattern: "<action_A>\\[?(.*?)\\]?</action_A>"
       required: false         # 不允许匹配失败
     - name: "step_A"             # 新增字段
-      pattern: "<step_A>\[?(.*?)\]?</step_A>"
+      pattern: "<step_A>\\[?(.*?)\\]?</step_A>"
       required: false         # 不允许匹配失败
     - name: "action_B"             # 新增字段
-      pattern: "<action_B>\[?(.*?)\]?</action_B>"
+      pattern: "<action_B>\\[?(.*?)\\]?</action_B>"
       required: false         # 不允许匹配失败
     - name: "step_B"             # 新增字段
-      pattern: "<step_B>\[?(.*?)\]?</step_B>"
+      pattern: "<step_B>\\[?(.*?)\\]?</step_B>"
       required: false         # 不允许匹配失败
 analysis:
-  min_consensus: 1
+  min_consensus: 2
   output_dir: "analysis_results/"  # 自定义输出目录
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中的两个玩家的战术复盘，包括玩家方单位的所有行动。"
 user_prompt_template: |

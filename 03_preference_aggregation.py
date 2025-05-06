@@ -2,7 +2,7 @@ import json
 import os
 import math
 from collections import defaultdict
-
+import yaml
 def load_comparisons(filepath):
     """
     从指定的JSON文件路径加载比较数据。
@@ -31,47 +31,7 @@ def load_comparisons(filepath):
     except Exception as e:
         print(f"读取文件时发生未知错误 {filepath}: {e}")
         return None
-    
-def calculate_win_loss_difference(comparisons_data):
-    """
-    计算每个文件的胜负次数和胜负差。
 
-    Args:
-        comparisons_data (list): 从JSON文件加载的比较条目列表。
-
-    Returns:
-        dict: key为文件名，value为字典 {'wins': int, 'losses': int, 'difference': int}
-    """
-    if not comparisons_data:
-        return {}
-
-    file_records = defaultdict(lambda: {'wins': 0, 'losses': 0, 'difference': 0})
-
-    for entry in comparisons_data:
-        if 'path' in entry and 'answer' in entry:
-            file_a, file_b = entry['path'].split('__')
-            outcome = entry['answer']
-
-            # 确保文件在记录中被初始化
-            if file_a not in file_records:
-                file_records[file_a] # 触发 defaultdict 初始化
-            if file_b not in file_records:
-                file_records[file_b] # 触发 defaultdict 初始化
-
-            # 根据比较结果更新胜负记录
-            if outcome == 'A':
-                file_records[file_a]['wins'] += 1
-                file_records[file_b]['losses'] += 1
-            elif outcome == 'B':
-                file_records[file_b]['wins'] += 1
-                file_records[file_a]['losses'] += 1
-            # 忽略其他 answer 值
-
-    # 计算胜负差
-    for file in file_records:
-        file_records[file]['difference'] = file_records[file]['wins'] - file_records[file]['losses']
-
-    return dict(file_records) # 返回普通字典
 
 def iterative_ranking(comparisons_data, num_iterations=100, learning_rate=50.0, initial_score=1000.0, scale_factor=400.0):
     """
@@ -95,7 +55,8 @@ def iterative_ranking(comparisons_data, num_iterations=100, learning_rate=50.0, 
     unique_files = set()
     for entry in comparisons_data:
         if 'path' in entry:
-            file_a, file_b = entry['path'].split('__')
+            file_a, file_b = entry['path'].replace(".json","").split('__')
+            
             unique_files.add(file_a)
             unique_files.add(file_b)
 
@@ -110,8 +71,9 @@ def iterative_ranking(comparisons_data, num_iterations=100, learning_rate=50.0, 
     for iteration in range(num_iterations):
         for entry in comparisons_data:
             if 'path' in entry and 'answer' in entry:
-                file_a, file_b = entry['path'].split('__')
+                file_a, file_b = entry['path'].replace(".json","").split('__')
                 outcome = entry['answer']
+                
 
                 # 确保文件在scores字典中 (尽管前面已经初始化了所有文件，这里做个额外的安全检查)
                 if file_a not in scores or file_b not in scores:
@@ -159,33 +121,13 @@ def iterative_ranking(comparisons_data, num_iterations=100, learning_rate=50.0, 
 
     return ranked_filenames, scores # 返回排名和最终得分字典
 
-# --- 主程序入口 ---
-if __name__ == "__main__":
-    # 在这里指定你的JSON文件路径
-    # 请确保这个文件存在并且是正确的JSON格式
-    json_filepath = "search_psy/results_v3_based/search_tank_back_red/deepseek-r1/summary.json"
+
+def single_aggregation(json_filepath):
 
     print(f"正在从文件读取数据: {json_filepath}")
-    comparisons = load_comparisons(json_filepath)
-    
-    
+    comparisons = load_comparisons(json_filepath)  
 
     if comparisons is not None:
-        
-        # 调用 Win/Loss Difference 方法计算胜负并排序输出
-        print("\n--- 使用 Win/Loss Difference 方法进行排名 (作为一致性的一种参考) ---")
-        win_loss_records = calculate_win_loss_difference(comparisons)
-        if win_loss_records:
-            # 按胜负差降序排序并输出
-            sorted_win_loss = sorted(win_loss_records.items(), key=lambda item: item[1]['difference'], reverse=True)
-            print("文件排名 (按胜负差降序):")
-            for i, (filename, record) in enumerate(sorted_win_loss):
-                 print(f"  {i+1}. {filename}: 胜={record['wins']}, 负={record['losses']}, 胜负差={record['difference']}")
-        else:
-            print("没有计算出胜负统计和排名，可能数据有问题。")
-        print("--- Win/Loss Difference 排名结束 ---\n")
-        
-        
         
         print("数据读取成功，开始迭代排名计算...")
         # 可以调整迭代次数、学习率等参数以观察效果
@@ -212,8 +154,6 @@ if __name__ == "__main__":
             # 准备要输出的JSON数据结构
             output_data = {
                 "ranked_files_iterative": ranked_files,
-                "ranked_files_winloss": [item[0] for item in sorted_win_loss],
-                "file_scores_iterative": final_scores,
                 #"win_loss_stats": win_loss_records, # 添加胜负统计数据
             }
 
@@ -234,3 +174,26 @@ if __name__ == "__main__":
 
     else:
         print("\n由于数据读取失败，排名计算中止。")
+
+def run(config_path):
+    with open(config_path, 'r', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+
+    task_name = config['task']
+    task_dir = os.path.join(config['output_base'], task_name)
+
+    # 遍历所有模型结果
+    for model_name in os.listdir(task_dir):
+        summary_path = os.path.join(task_dir, model_name, "summary.json")
+        if not os.path.exists(summary_path):
+            continue
+        try:
+            single_aggregation(summary_path)
+        except Exception as e:
+            print(e)
+            continue
+
+# --- 主程序入口 ---
+if __name__ == "__main__":
+    run("configs/config3.yaml")
+

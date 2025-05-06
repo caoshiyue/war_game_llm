@@ -1,7 +1,7 @@
 task: "search_Return_red"
 model: "gpt-4o"
 max_workers: 16
-request_interval: 1.0 # 请求间隔（秒）
+request_interval: 5.0 # 请求间隔（秒）
 output_base: "./search_psy/results_v3_based"
 data_dir: "./data/results_overall_deepseek_v3"
 api_params:
@@ -13,10 +13,10 @@ data_processing:
   "content_field_b": "analyze_0.chunks_results.0.content"  
   extract_fields:
     - name: "action_A"             # 新增字段
-      pattern: "<action_A>\[?(.*?)\]?</action_A>"
+      pattern: "<action_A>\\[?(.*?)\\]?</action_A>"
       required: true         # 不允许匹配失败
     - name: "action_B"             # 新增字段
-      pattern: "<action_B>\[?(.*?)\]?</action_B>"
+      pattern: "<action_B>\\[?(.*?)\\]?</action_B>"
       required: true         # 不允许匹配失败
 analysis:
   min_consensus: 3

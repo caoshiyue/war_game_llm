@@ -1,7 +1,7 @@
 .vscode/
 old_result/
 data/
-data copy/
 old/
 api_key.py
 __pycache__/
+*.json
