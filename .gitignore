@@ -1,6 +1,7 @@
-*.json
 .vscode/
 old_result/
 data/
+data copy/
+old/
 api_key.py
-*.pyc
+__pycache__/
