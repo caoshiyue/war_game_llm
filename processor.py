@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-22 10:06:05
+# LastEditTime: 2025-05-06 08:37:13
 ## 
 import json
 import re
@@ -288,7 +288,7 @@ class DataProcessor:
             finally:
                 os.remove(lock_path)
                 
-    async def run(self, file_list: list, overwrite=True):
+    async def run(self, file_list: list, overwrite=True, num_sample=0):
         """处理文件列表中所有可能的无序配对"""
         import itertools
 
@@ -299,7 +299,8 @@ class DataProcessor:
 
         pairs = list(itertools.combinations(file_list, 2))
         random.shuffle(pairs) 
-        pairs=pairs[:40]
+        if num_sample!=0:
+            pairs=pairs[:num_sample]
         total_pairs = len(pairs)
         semaphore = asyncio.Semaphore(self.config['max_workers'])
         processed_pairs = 0
