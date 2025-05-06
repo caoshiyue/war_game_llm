@@ -18,6 +18,8 @@ def calculate_accuracy(config_path):
     task_name = config['task'] #! 这里的方案不好
     if task_name.endswith("_eval"):
         task_name_base=task_name[:-5]
+    else:
+        task_name_base=task_name
     output_base = config['output_base']
     extract_path = f"extract/extract_{task_name_base}.json"
     report_path = config['analysis'].get('accuracy_report', f"accuracy_{task_name}.json")
@@ -114,4 +116,8 @@ if __name__ == "__main__":
     
     calculate_accuracy("configs/config3_eval.yaml")
     calculate_accuracy("configs/config4_eval.yaml")
+    calculate_accuracy("configs/config5_eval.yaml")
+    calculate_accuracy("configs/config6_eval.yaml")
+    calculate_accuracy("configs/config7_eval.yaml")
+    
 

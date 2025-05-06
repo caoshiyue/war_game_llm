@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-09 14:58:57
+# LastEditTime: 2025-04-22 09:17:54
 ## 
 import openai
 import asyncio
@@ -108,7 +108,7 @@ async def openai_response_async(**kwargs):
 
     # 修改 kwargs 中的 messages，将 role 为 'system' 改为 'user'
     thinking=""
-    while retries < 3: #! 注意，外部还需要再次retry
+    while retries < 2: #! 注意，外部还需要再次retry
         try:
             #completion = await aclient.chat.completions.create(timeout=30,**kwargs)
             aclient_i = random.choice(api_instances)
@@ -126,12 +126,12 @@ async def openai_response_async(**kwargs):
                     kwargs.pop('top_p')
                 completion = await asyncio.wait_for(aclient_o1.chat.completions.create(**kwargs), timeout=60)
             elif kwargs.get('model').startswith("deepseek-r"):
-                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=120)
+                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=300)
                 thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
             elif kwargs.get('model').startswith("qwen") or kwargs.get('model').startswith("deepseek-v") :
-                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=30)
+                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=60)
             else:
-                completion = await asyncio.wait_for(aclient.chat.completions.create(**kwargs), timeout=30)
+                completion = await asyncio.wait_for(aclient.chat.completions.create(**kwargs), timeout=60)
             return thinking + completion.choices[0].message.content
 
 

@@ -1,3 +1,11 @@
+'''
+Author: caoshiyue caoshiyueKevin@Gmail.com
+Date: 2025-04-21 07:36:12
+LastEditors: caoshiyue caoshiyueKevin@Gmail.com
+LastEditTime: 2025-05-04 04:53:41
+FilePath: /strategy4/02_extract_data2.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 import os
 import json
 import yaml
@@ -76,9 +84,10 @@ def analyze_task_results(config_path):
 
 # 使用方式
 if __name__ == "__main__":
-    analyze_task_results("configs/config5.yaml")
-    analyze_task_results("configs/config6.yaml")
-    analyze_task_results("configs/config7.yaml")
-    analyze_task_results("configs/config8.yaml")
-    analyze_task_results("configs/config9.yaml")
-    analyze_task_results("configs/config10.yaml")
+    analyze_task_results(        "configs/config3.yaml")
+    analyze_task_results(        "configs/config4.yaml")
+    analyze_task_results(        "configs/config5.yaml")
+    analyze_task_results(        "configs/config6.yaml")
+    analyze_task_results(        "configs/config7.yaml")
+
+    

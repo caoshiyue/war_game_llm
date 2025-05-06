@@ -1,4 +1,4 @@
-task: "search_tank_path_red_eval"
+task: "search_point2_red_eval"
 model: "gpt-4o"
 max_workers: 8
 request_interval: 2.0 # 请求间隔（秒）
@@ -23,5 +23,5 @@ user_prompt_template: |
   对局B:
   {contentB}
 
-  首先，分别分析复盘关键帧中玩家对哪些单位采取了哪些行动；然后，根据"重型坦克"的路径设置，分析哪一位玩家行动的风险更高。
+  首先，分别分析复盘关键帧中玩家对哪些单位采取了哪些行动；然后，根据"推演后期夺控点争夺情况"，分析哪一位玩家行动的风险更高。
   请给出分析过程，在回答最后用++A++或++B++说明对局A片段还是对局B片段的玩家行动的风险更高。

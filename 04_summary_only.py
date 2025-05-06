@@ -1,16 +1,22 @@
 '''
 Author: caoshiyue caoshiyueKevin@Gmail.com
-Date: 2025-04-21 07:36:12
+Date: 2025-04-22 09:24:12
 LastEditors: caoshiyue caoshiyueKevin@Gmail.com
-LastEditTime: 2025-05-04 02:05:19
-FilePath: /strategy4/01_label.py
+LastEditTime: 2025-05-04 04:28:44
+FilePath: /strategy4/04_summary_only.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
 ##
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-22 10:26:47
+# LastEditTime: 2025-04-22 09:24:54
+## 
+##
+# Author:  
+# Description:  
+# LastEditors: Shiyuec
+# LastEditTime: 2025-04-22 09:21:20
 ## 
 import os
 import asyncio
@@ -29,7 +35,7 @@ async def single_process(model,config_path,overwrite=True):
     processor = DataProcessor(config)
     
     data_files = find_data_files(config['data_dir'])
-    await processor.run(data_files,overwrite)
+    await processor.generate_summary()
     processor.print_summary()
 
 async def async_runner(models,configs,overwrite):
@@ -42,7 +48,7 @@ async def async_runner(models,configs,overwrite):
     ]
     
     # 使用信号量控制并发度（根据系统资源调整）
-    semaphore = asyncio.Semaphore(8)  # 同时最多运行4个任务
+    semaphore = asyncio.Semaphore(32)  # 同时最多运行4个任务
     
     async def sem_task(task):
         async with semaphore:
@@ -55,15 +61,16 @@ async def async_runner(models,configs,overwrite):
 # "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"
 
 if __name__ == "__main__":
-    models = [ "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"]
+    models = [ "deepseek-r1",]
     configs = [
-        "configs/config3_eval.yaml",
-        "configs/config4_eval.yaml",
-        "configs/config5_eval.yaml",
-        "configs/config6_eval.yaml",
-        "configs/config7_eval.yaml",
+        "configs/config3.yaml",
+        "configs/config4.yaml",
+        "configs/config5.yaml",
+        "configs/config6.yaml",
+        "configs/config7.yaml",
 
     ]
     asyncio.run(async_runner(models,configs,overwrite=False))
     #asyncio.run(single_process("gpt-4o","configs/config1.yaml"))
 
+    
