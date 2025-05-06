@@ -163,7 +163,7 @@ def iterative_ranking(comparisons_data, num_iterations=100, learning_rate=50.0, 
 if __name__ == "__main__":
     # 在这里指定你的JSON文件路径
     # 请确保这个文件存在并且是正确的JSON格式
-    json_filepath = "search_psy/results_v3_based_02/search_multi_tank_red/deepseek-r1/summary.json"
+    json_filepath = "search_psy/results_v3_based/search_tank_back_red/deepseek-r1/summary.json"
 
     print(f"正在从文件读取数据: {json_filepath}")
     comparisons = load_comparisons(json_filepath)
