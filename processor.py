@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-06 13:57:11
+# LastEditTime: 2025-05-07 08:31:47
 ## 
 import json
 import re
@@ -17,7 +17,7 @@ import random
 import itertools
 
 # Setup basic logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 class DataProcessor:
@@ -96,7 +96,7 @@ class DataProcessor:
             try:
                 with open(f_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                    content_path = config['path'].split('.')
+                    content_path = [] if config['path'] == '' else config['path'].split('.')
                     content = self._nested_get(data, content_path)
                     if content is None:
                         raise KeyError(f"Missing required field in {f_path}: {config['path']}")
@@ -173,7 +173,7 @@ class DataProcessor:
         #           File A Content: {contentA}
         #           File B Content: {contentB}
         try:
-            user_content = self.config['user_prompt_template'].format(**contents)
+            user_content = self.config['user_prompt_template'].format(prompt=contents)
         except KeyError as e:
             logger.error(f"Prompt template missing key: {e}. Available keys: {list(contents.keys())}")
             raise
@@ -380,8 +380,8 @@ class DataProcessor:
             return
 
         # Check if the number of files in pairs matches config
-        if file_pairs and len(file_pairs[0]) != len(self.file_configs):
-            raise ValueError(f"Mismatch: Input file tuples have {len(file_pairs[0])} files, but config requires {len(self.file_configs)}")
+        # if file_pairs and len(file_pairs[0]) != len(self.file_configs):
+        #     raise ValueError(f"Mismatch: Input file tuples have {len(file_pairs[0])} files, but config requires {len(self.file_configs)}")
 
         semaphore = asyncio.Semaphore(self.config.get('max_workers', 5)) # Default to 5 workers
         processed_pairs = 0
@@ -402,7 +402,7 @@ class DataProcessor:
         async def bounded_process(pair):
             async with semaphore:
                 try:
-                    await asyncio.sleep(random.uniform(0, self.config['request_interval']))
+                    await asyncio.sleep(random.uniform(1, self.config['request_interval']))
                     await self.process_unit(pair, overwrite)
                 finally:
                     await update_progress()

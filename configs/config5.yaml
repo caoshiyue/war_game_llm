@@ -4,6 +4,7 @@ max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
 output_base: "./search_psy/results_v3_based"
 data_dir: "./data/results_overall_deepseek_v3"
+N: 10
 api_params:
   max_tokens: 8000
   temperature: 0.7
@@ -33,10 +34,10 @@ analysis:
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中的两个玩家的战术复盘，包括玩家方单位的所有行动。"
 user_prompt_template: |
   对局A:
-  {contentA}
+  {prompt[contentA]}
 
   对局B:
-  {contentB}
+  {prompt[contentB]}
 
   首先，分别分析复盘中玩家对哪些单位采取了哪些行动。
   其次，请在这两局复盘中各寻找一个片段（明确时间步），要求两个片段都处于推演后期(1200以后)，玩家方有一个已夺控点，还有一个未夺控点，但两个玩家的策略完全不同：其中一个玩家集中兵力守住已夺控的点，另一个玩家分散兵力一边防守一边进行进攻新夺控点。如果双方的片段区分不明显，直接回答++E++结束。

@@ -4,6 +4,7 @@ max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
 output_base: "./search_psy/results_v3_based"
 data_dir: "./data/results_overall_deepseek_v3"
+N: 10
 api_params:
   max_tokens: 8000
   temperature: 0.7
@@ -24,10 +25,10 @@ analysis:
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中的两个玩家的战术复盘，包括玩家方单位的所有行动。"
 user_prompt_template: |
   对局A:
-  {contentA}
+  {prompt[contentA]}
 
   对局B:
-  {contentB}
+  {prompt[contentB]}
 
   首先，分别分析复盘中玩家对哪些单位采取了哪些行动。
   其次，请在这两局复盘中各寻找一个片段（明确时间步），要求这两个片段中玩家操作的单位相同，但策略不相同，且最能反应出两者"看重长期利益"偏好不一致的片段，即当前行动虽然没有产生立即的回报，但在后期战局中显示出了效果。
