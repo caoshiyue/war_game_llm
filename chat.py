@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-13 08:04:20
+# LastEditTime: 2025-05-07 12:03:35
 ## 
 ##
 # Author:  
@@ -20,7 +20,7 @@ Tell me about youself
 prompt= [{'role': 'system', 'content': msg}]
 
 response = openai_response_sync(
-    model="gpt-4o",
+    model="qwen-max-latest",
     messages=prompt,
     max_tokens=4000,
     temperature=0.7,

@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-22 09:17:54
+# LastEditTime: 2025-05-07 12:09:49
 ## 
 import openai
 import asyncio
@@ -117,21 +117,19 @@ async def openai_response_async(**kwargs):
                     {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
                     for msg in kwargs['messages']
                 ]
-                kwargs['messages'] += [
-                    {'role': 'user', 'content':'Answers need to be less than 1000 words.'} 
-                ]
+
                 kwargs['temperature'] =1
                 kwargs['max_tokens'] =8000
                 if 'top_p' in kwargs:
                     kwargs.pop('top_p')
-                completion = await asyncio.wait_for(aclient_o1.chat.completions.create(**kwargs), timeout=60)
+                completion = await asyncio.wait_for(aclient_o1.chat.completions.create(**kwargs), timeout=120)
             elif kwargs.get('model').startswith("deepseek-r"):
                 completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=300)
                 thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
             elif kwargs.get('model').startswith("qwen") or kwargs.get('model').startswith("deepseek-v") :
-                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=60)
+                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=120)
             else:
-                completion = await asyncio.wait_for(aclient.chat.completions.create(**kwargs), timeout=60)
+                completion = await asyncio.wait_for(aclient.chat.completions.create(**kwargs), timeout=120)
             return thinking + completion.choices[0].message.content
 
 
@@ -151,21 +149,18 @@ def openai_response_sync(**kwargs):
             {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
             for msg in kwargs['messages']
         ]
-        kwargs['messages'] += [
-            {'role': 'user', 'content':'Answers need to be less than 1000 words.'} 
-        ]
         kwargs['temperature'] =1
         kwargs['max_tokens'] =8000
         if 'top_p' in kwargs:
             kwargs.pop('top_p')
-        completion = client_o1.chat.completions.create(timeout=60,**kwargs)
+        completion = client_o1.chat.completions.create(timeout=120,**kwargs)
     elif kwargs.get('model').startswith("deepseek-r"):
         completion = client_ds.chat.completions.create(timeout=120,**kwargs)
         thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
     elif kwargs.get('model').startswith("qwen") or kwargs.get('model').startswith("deepseek-v") :
-        completion = client_ds.chat.completions.create(timeout=30,**kwargs)
+        completion = client_ds.chat.completions.create(timeout=120,**kwargs)
     else:
-        completion = client.chat.completions.create(timeout=30,**kwargs)
+        completion = client.chat.completions.create(timeout=120,**kwargs)
     return thinking + completion.choices[0].message.content
 
 

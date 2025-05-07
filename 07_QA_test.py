@@ -67,11 +67,13 @@ async def async_runner(models,configs,**kwargs):
 # "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"
 
 if __name__ == "__main__":
-    models = ["deepseek-r1",]
+    models = ["deepseek-v3","gpt-4o", "o3-mini", "qwen-max-latest"]
     configs = [
-    'configs/config9.yaml',
-    'configs/config10.yaml',
-    'configs/config11.yaml',
+    # 'configs/config9.yaml',
+    # 'configs/config10.yaml',
+    # 'configs/config11.yaml',
+    # 'configs/config12.yaml',
+    'configs/config13.yaml',
         
     ]
     asyncio.run(async_runner(models,configs,overwrite=False,num_sample=0))

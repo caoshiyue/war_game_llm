@@ -4,4 +4,4 @@ old/
 api_key.py
 __pycache__/
 QA_dataset/
-QA_test/
+QA_result/

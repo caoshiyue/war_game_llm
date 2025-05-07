@@ -13,7 +13,6 @@ def load_predictions(summary_filepath: str) -> list:
     Returns:
         A list of prediction entries if successful, otherwise an empty list.
     """
-    print(f"Loading predictions from: {summary_filepath}")
     try:
         with open(summary_filepath, 'r', encoding='utf-8') as f:
             summary_data = json.load(f)
@@ -88,8 +87,6 @@ def analyze_predictions(predictions: list, ground_truth_folder: str) -> dict:
     incorrect_predictions = 0 # This will also count entries where GT loading failed
     total_predictions = len(predictions)
 
-    print(f"Analyzing {total_predictions} predictions...")
-
     if not os.path.isdir(ground_truth_folder):
         print(f"Error: Ground truth folder not found or is not a directory: {ground_truth_folder}")
         # If the folder doesn't exist, all predictions are effectively incorrect/unverifiable
@@ -136,7 +133,7 @@ def generate_report(model,analysis_results: dict):
     correct = analysis_results.get("correct_predictions", 0)
     incorrect = analysis_results.get("incorrect_predictions", 0) # Includes entries where GT was missing
 
-    print(f"\n--- {model} Accuracy Report ---")
+    print(f"--- {model} Accuracy Report ---")
     print(f"Total Predictions Processed: {total}")
     print(f"Correct Predictions: {correct}")
     print(f"Incorrect Predictions: {incorrect}")
@@ -180,7 +177,7 @@ def run(config_path):
         model_dir = os.path.dirname(summary_file_path)
         # os.path.basename() 会得到目录的最后一部分，即 '某个目录(model)'
         model_name = os.path.basename(model_dir)
-        print(f"\n--- Processing file: {summary_file_path} ---")
+        print(f"\n--------- Processing task: {task_name} ---------")
 
         # --- Workflow for each individual summary file ---
         # 1. Load predictions from the current summary file
@@ -188,7 +185,6 @@ def run(config_path):
 
         # Only proceed with analysis and reporting if predictions were loaded successfully from *this* file
         if predictions_list:
-            print("Predictions loaded successfully.")
             # 2. Analyze predictions against ground truth
             # 注意：这里假设 ground_truth_folder_path 对所有 summary.json 文件都是一样的
             # 如果 ground_truth 路径依赖于 summary.json 的位置，你需要调整 analyze_predictions 或在此之前计算正确的路径
@@ -202,4 +198,8 @@ def run(config_path):
 
 # --- Main execution ---
 if __name__ == "__main__":
-    run('configs/config9_qatest.yaml')
+    # run('configs/config9.yaml')
+    # run('configs/config10.yaml')
+    # run('configs/config11.yaml')
+    # run('configs/config12.yaml')
+    run('configs/config13.yaml')
