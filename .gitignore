@@ -4,8 +4,4 @@ old/
 api_key.py
 __pycache__/
 QA_dataset/
-<<<<<<< HEAD
-QA_test
-=======
 QA_test/
->>>>>>> 6d8252878df9ef2cba8a30731f10dd4c6186ad48
