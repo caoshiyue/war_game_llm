@@ -163,9 +163,9 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
 
 # --- 示例使用 ---
 if __name__ == "__main__":
-    input_main_data_path = 'extract/search_point2_red/extract_search_point2_red.json'
-    content_files_base_dir = 'extract/search_point2_red/'
-    output_questions_directory = 'QA_dataset/search_point2_red/'
+    input_main_data_path = 'extract/search_multi_tank_red/extract_search_multi_tank_red.json'
+    content_files_base_dir = 'extract/search_multi_tank_red/'
+    output_questions_directory = 'QA_dataset/search_multi_tank_red/'
 
     # 确保 output 目录存在
     os.makedirs(output_questions_directory, exist_ok=True)

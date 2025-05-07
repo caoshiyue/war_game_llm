@@ -19,7 +19,7 @@ def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[
     for item in file_list:
         # Create a tuple with the item repeated 5 times
         # Using tuple([item] * 5) is a concise way to create a tuple of repeated items
-        repeated_tuple = tuple([item] * 5)
+        repeated_tuple = tuple([item] )
         file_pairs.append(repeated_tuple)
     # Note: num_sample is ignored based on the described requirement of repeating each item 5 times.
     # If sampling or pair generation was the actual goal, the logic would be different.

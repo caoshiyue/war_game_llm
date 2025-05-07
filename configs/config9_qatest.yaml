@@ -2,8 +2,8 @@ task: "QA_test_red"
 model: "gpt-4o"
 max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
-output_base: "./QA_test/test"
-data_dir: "./QA_dataset/test"
+output_base: "./QA_test/"
+data_dir: "./QA_dataset/"
 N: 10
 api_params:
   max_tokens: 8000
@@ -12,15 +12,7 @@ api_params:
 data_processing:
   file_configs:
     - name: "contentA"  
-      path: "query.A"
-    - name: "contentB"
-      path: "query.B"
-    - name: "contentC"  
-      path: "query.C"
-    - name: "contentD"
-      path: "query.D"
-    - name: "content_base_question"
-      path: "query.base_question"
+      path: "query"
   extract_fields:
 analysis:
   min_consensus: 2
@@ -28,16 +20,16 @@ analysis:
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
 user_prompt_template: |
   对局A:
-  {contentA}
+  {prompt[contentA][A]}
 
   对局B:
-  {contentB}
+  {prompt[contentA][B]}
 
   对局C:
-  {contentC}
+  {prompt[contentA][C]}
 
   对局D:
-  {contentD}
+  {prompt[contentA][D]}
 
-  {content_base_question}
+  {prompt[contentA][base_question]}
   
