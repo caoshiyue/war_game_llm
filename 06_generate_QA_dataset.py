@@ -1,0 +1,178 @@
+'''
+Author: Likun Yang
+Date: 2025-05-07 14:26:06
+LastEditors: Likun Yang
+LastEditTime: 2025-05-07 16:25:55
+Copyright (c) 2025 by Likun Yang, All Rights Reserved. 
+'''
+import json
+import os
+import random
+import itertools
+import datetime
+from tqdm import tqdm
+
+def load_json(filepath):
+    """Loads a JSON file."""
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"错误：找不到文件 {filepath}")
+        return None
+    except json.JSONDecodeError:
+        print(f"错误：解码JSON文件失败 {filepath}")
+        return None
+
+def save_json(data, filepath):
+    """Saves data to a JSON file."""
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    try:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+    except IOError as e:
+        print(f"错误：保存文件失败 {filepath}: {e}")
+
+def get_content_from_file(filename, base_dir):
+    """Reads a file from base_dir and returns its 'content' field."""
+    filepath = os.path.join(base_dir, filename)
+    data = load_json(filepath)
+    if data and 'content' in data:
+        return data['content']
+    else:
+        print(f"警告：文件 {filepath} 不存在或缺少 'content' 字段。")
+        return None
+
+def generate_question_combinations(data):
+    """Generates combinations of files based on the rules."""
+    first_items = data.get('first', [])
+    last_items = data.get('last', [])
+    combinations = []
+
+    # Rule 1: 1 first, 3 last
+    if len(last_items) >= 3:
+        for first_item in first_items:
+            for last_combo in itertools.combinations(last_items, 3):
+                combo_items = [first_item] + list(last_combo)
+                combinations.append({
+                    'items': combo_items,
+                    'ground_truth_path': first_item['path'],
+                    'question_type': 'first_single' # Indicates the single item was from 'first'
+                })
+    else:
+        print("警告：'last' 列表中少于3个文件，无法生成 '1 first, 3 last' 组合。")
+
+    # Rule 2: 3 first, 1 last
+    if len(first_items) >= 3:
+        for last_item in last_items:
+            for first_combo in itertools.combinations(first_items, 3):
+                combo_items = list(first_combo) + [last_item]
+                combinations.append({
+                    'items': combo_items,
+                    'ground_truth_path': last_item['path'],
+                    'question_type': 'last_single' # Indicates the single item was from 'last'
+                })
+    else:
+         print("警告：'first' 列表中少于3个文件，无法生成 '3 first, 1 last' 组合。")
+
+
+    return combinations
+
+def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir):
+    """
+    Creates the multiple-choice question dataset.
+
+    Args:
+        input_json_path (str): Path to the main JSON file containing 'first' and 'last' lists.
+        content_base_dir (str): Base directory containing content JSON files (e.g., 'extract/search/').
+        output_dir (str): Directory to save the generated question JSON files.
+    """
+    main_data = load_json(input_json_path)
+    if main_data is None:
+        return
+
+    combinations = generate_question_combinations(main_data)
+
+    if not combinations:
+        print("未生成任何有效的题目组合。")
+        return
+    
+    # Randomize the order of questions
+    random.shuffle(combinations)
+
+    question_counter = 0
+    for combo_info in tqdm(combinations, desc="生成题目"):
+        items = combo_info['items']
+        ground_truth_path = combo_info['ground_truth_path']
+        question_type = combo_info['question_type']
+
+        # --- 要求2：根据文件组合名，获取选项信息 ---
+        options_data = []
+        valid_combo = True
+        for item in items:
+            content = get_content_from_file(item['path'], content_base_dir)
+            if content is None:
+                # If content is missing for any file, skip this combination
+                valid_combo = False
+                print(f"跳过组合，因为文件 {item['path']} 的内容无法获取。")
+                break
+            options_data.append({'path': item['path'], 'content': content})
+
+        if not valid_combo:
+            continue # Skip to the next combination if content retrieval failed
+
+        # Randomize the order of options
+        random.shuffle(options_data)
+
+        # Assign option labels and find the ground truth label
+        option_labels = ['A', 'B', 'C', 'D']
+        question_json = {
+                        "meta":{},
+                        "query":{}
+                        }
+        ground_truth_label = None
+        
+        question_json["meta"]["id"] = question_counter
+        now = datetime.datetime.now()
+        question_json["meta"]["time"] = now.strftime("%Y%m%d%H%M%S")
+
+        for i, option_item in enumerate(options_data):
+            label = option_labels[i]
+            question_json["query"][f"{label}"] = option_item['content']
+            question_json["meta"][f"{label}_file_path"] = option_item['path']
+            # Find the label corresponding to the ground truth path
+            if option_item['path'] == ground_truth_path:
+                ground_truth_label = label
+
+        # Formulate the question stem based on the type of single item
+        if question_type == 'first_single':
+            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最高，在回答的最后以++A++,++B++,++C++,++D++的形式作为答案，若无法判断则回答++E++。"
+        else: # 'last_single'
+            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最低，在回答的最后以++A++,++B++,++C++,++D++的形式作为答案，若无法判断则回答++E++。"
+
+        question_json["query"]["base_question"] = stem
+        question_json["query"]["groundtruth"] = ground_truth_label
+        
+        # Save the generated question
+        question_filename = f"question_{question_counter:06d}.json"
+        output_filepath = os.path.join(output_dir, question_filename)
+        save_json(question_json, output_filepath)
+        question_counter += 1
+
+    print(f"\n生成完成。共生成 {question_counter} 道题目文件到目录：{output_dir}")
+
+# --- 示例使用 ---
+if __name__ == "__main__":
+    input_main_data_path = 'extract/search_point2_red/extract_search_point2_red.json'
+    content_files_base_dir = 'extract/search_point2_red/'
+    output_questions_directory = 'QA_dataset/search_point2_red/'
+
+    # 确保 output 目录存在
+    os.makedirs(output_questions_directory, exist_ok=True)
+
+    print(f"开始生成题目数据集，输入文件：{input_main_data_path}，内容目录：{content_files_base_dir}，输出目录：{output_questions_directory}")
+
+    # 调用函数生成数据集
+    create_multiple_choice_dataset(input_main_data_path, content_files_base_dir, output_questions_directory)
+
+    print("\n请检查输出目录查看生成的题目文件。")

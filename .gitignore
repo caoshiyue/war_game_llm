@@ -3,3 +3,5 @@ search_psy/
 old/
 api_key.py
 __pycache__/
+QA_dataset/
+QA_test/
