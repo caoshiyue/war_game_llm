@@ -12,13 +12,13 @@ api_params:
 data_processing:
   file_configs:
     - name: "contentA"  
-      path: "analyze_0.chunks_results.0.content"
+      path: ""
     - name: "contentB"
-      path: "analyze_0.chunks_results.0.content"
+      path: ""
     - name: "contentC"  
-      path: "analyze_0.chunks_results.0.content"
+      path: ""
     - name: "contentD"
-      path: "analyze_0.chunks_results.0.content"
+      path: ""
   extract_fields:
 analysis:
   min_consensus: 2
@@ -26,16 +26,16 @@ analysis:
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中的两个玩家的战术复盘，包括玩家方单位的所有行动。"
 user_prompt_template: |
   对局A:
-  {contentA}
+  {prompt[contentA][analyze_0][chunks_results][0][content]}
 
   对局B:
-  {contentB}
+  {prompt[contentA][analyze_1][chunks_results][0][content]}
 
   对局C:
-  {contentC}
+  {prompt[contentA][analyze_1][overall_result][0][content]}
 
   对局D:
-  {contentD}
+  {prompt[contentA][analyze_0][overall_result][0][content]}
 
   首先，分别分析复盘中玩家对哪些单位采取了哪些行动。
   其次，回答哪一个对局中玩家的采取的策略风险最高，在回答的最后以++A++,++B++,++C++,++D++的形式作为答案，若无法判断则回答++E++。
