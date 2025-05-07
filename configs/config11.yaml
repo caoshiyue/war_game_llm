@@ -1,0 +1,35 @@
+task: "tank_back_red"
+model: "gpt-4o"
+max_workers: 16
+request_interval: 5.0 # 请求间隔（秒）
+output_base: "./QA_result/"
+data_dir: "./QA_dataset/"
+N: 5
+api_params:
+  max_tokens: 8000
+  temperature: 0.7
+  top_p: 0.9
+data_processing:
+  file_configs:
+    - name: "contentA"  
+      path: "query"
+  extract_fields:
+analysis:
+  min_consensus: 2
+  output_dir: "analysis_results/"  # 自定义输出目录
+system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
+user_prompt_template: |
+  对局A:
+  {prompt[contentA][A]}
+
+  对局B:
+  {prompt[contentA][B]}
+
+  对局C:
+  {prompt[contentA][C]}
+
+  对局D:
+  {prompt[contentA][D]}
+
+  {prompt[contentA][base_question]}
+  

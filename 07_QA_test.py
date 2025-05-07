@@ -16,6 +16,7 @@ import random
 def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[Tuple[str, str]]:
 
     file_pairs = []
+    file_list.sort()
     for item in file_list:
         # Create a tuple with the item repeated 5 times
         # Using tuple([item] * 5) is a concise way to create a tuple of repeated items
@@ -23,7 +24,8 @@ def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[
         file_pairs.append(repeated_tuple)
     # Note: num_sample is ignored based on the described requirement of repeating each item 5 times.
     # If sampling or pair generation was the actual goal, the logic would be different.
-
+    if num_sample!=0:
+        file_pairs=file_pairs[:num_sample]
     return file_pairs
 
 
@@ -36,8 +38,8 @@ async def single_process(model,config_path,**kwargs):
     config = load_config(config_path)
     config['model']=model
     processor = DataProcessor(config)
-    data_files = find_data_files(config['data_dir'])
-    file_pairs = generate_file_pairs_from_list(data_files)
+    data_files = find_data_files(os.path.join(config['data_dir'],config['task']))
+    file_pairs = generate_file_pairs_from_list(data_files,kwargs['num_sample'])
 
     await processor.run(file_pairs,overwrite=kwargs['overwrite'])
     processor.print_summary()
@@ -67,14 +69,11 @@ async def async_runner(models,configs,**kwargs):
 if __name__ == "__main__":
     models = ["deepseek-r1",]
     configs = [
-        # "configs/config3.yaml",
-        # "configs/config4.yaml",
-        # "configs/config5.yaml",
-        # "configs/config6.yaml",
-        # "configs/config7.yaml",
-        "configs/config9_qatest.yaml",
+    'configs/config9.yaml',
+    'configs/config10.yaml',
+    'configs/config11.yaml',
         
     ]
-    asyncio.run(async_runner(models,configs,overwrite=False,num_sample=16))
+    asyncio.run(async_runner(models,configs,overwrite=False,num_sample=0))
     #asyncio.run(single_process("gpt-4o","configs/config1.yaml"))
 

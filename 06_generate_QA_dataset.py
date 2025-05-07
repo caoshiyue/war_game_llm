@@ -11,7 +11,7 @@ import random
 import itertools
 import datetime
 from tqdm import tqdm
-
+import yaml
 def load_json(filepath):
     """Loads a JSON file."""
     try:
@@ -161,11 +161,27 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
 
     print(f"\n生成完成。共生成 {question_counter} 道题目文件到目录：{output_dir}")
 
-# --- 示例使用 ---
-if __name__ == "__main__":
-    input_main_data_path = 'extract/search_multi_tank_red/extract_search_multi_tank_red.json'
-    content_files_base_dir = 'extract/search_multi_tank_red/'
-    output_questions_directory = 'QA_dataset/search_multi_tank_red/'
+def run(config_path):
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+    except FileNotFoundError:
+        print(f"Error: Config file not found at {config_path}")
+        return
+    except yaml.YAMLError as e:
+        print(f"Error loading config file {config_path}: {e}")
+        return
+    except Exception as e:
+        print(f"Error reading config file {config_path}: {e}")
+        return
+
+    task_name = config.get('task')
+    data_dir = config.get('data_dir')
+
+    content_files_base_dir = 'extract/'+task_name
+    input_main_data_path = os.path.join(content_files_base_dir,'extract_'+task_name+'.json')
+
+    output_questions_directory = os.path.join(data_dir,task_name)
 
     # 确保 output 目录存在
     os.makedirs(output_questions_directory, exist_ok=True)
@@ -175,4 +191,9 @@ if __name__ == "__main__":
     # 调用函数生成数据集
     create_multiple_choice_dataset(input_main_data_path, content_files_base_dir, output_questions_directory)
 
-    print("\n请检查输出目录查看生成的题目文件。")
+
+# --- 示例使用 ---
+if __name__ == "__main__":
+    run('configs/config9.yaml')
+    run('configs/config10.yaml')
+    run('configs/config11.yaml')

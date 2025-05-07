@@ -1,5 +1,7 @@
 import json
 import os
+import yaml
+import glob
 
 def load_predictions(summary_filepath: str) -> list:
     """
@@ -123,7 +125,7 @@ def analyze_predictions(predictions: list, ground_truth_folder: str) -> dict:
     }
 
 
-def generate_report(analysis_results: dict):
+def generate_report(model,analysis_results: dict):
     """
     Generates and prints the accuracy report.
 
@@ -134,7 +136,7 @@ def generate_report(analysis_results: dict):
     correct = analysis_results.get("correct_predictions", 0)
     incorrect = analysis_results.get("incorrect_predictions", 0) # Includes entries where GT was missing
 
-    print("\n--- Accuracy Report ---")
+    print(f"\n--- {model} Accuracy Report ---")
     print(f"Total Predictions Processed: {total}")
     print(f"Correct Predictions: {correct}")
     print(f"Incorrect Predictions: {incorrect}")
@@ -150,26 +152,54 @@ def generate_report(analysis_results: dict):
     else:
         print("Overall Accuracy: N/A (No predictions processed)")
 
+def run(config_path):
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+    except FileNotFoundError:
+        print(f"Error: Config file not found at {config_path}")
+        return
+    except yaml.YAMLError as e:
+        print(f"Error loading config file {config_path}: {e}")
+        return
+    except Exception as e:
+        print(f"Error reading config file {config_path}: {e}")
+        return
+
+    task_name = config.get('task')
+    data_dir = config.get('data_dir')
+    output_base= config.get('output_base')
+
+    content_files_base_dir = 'extract/'+task_name
+    ground_truth_folder_path = os.path.join(data_dir,task_name)
+    search_base_dir = os.path.join(output_base, task_name)
+    all_summary_files = glob.glob(os.path.join(search_base_dir, '**', 'summary.json'), recursive=True)
+
+
+    for summary_file_path in all_summary_files:
+        model_dir = os.path.dirname(summary_file_path)
+        # os.path.basename() 会得到目录的最后一部分，即 '某个目录(model)'
+        model_name = os.path.basename(model_dir)
+        print(f"\n--- Processing file: {summary_file_path} ---")
+
+        # --- Workflow for each individual summary file ---
+        # 1. Load predictions from the current summary file
+        predictions_list = load_predictions(summary_file_path)
+
+        # Only proceed with analysis and reporting if predictions were loaded successfully from *this* file
+        if predictions_list:
+            print("Predictions loaded successfully.")
+            # 2. Analyze predictions against ground truth
+            # 注意：这里假设 ground_truth_folder_path 对所有 summary.json 文件都是一样的
+            # 如果 ground_truth 路径依赖于 summary.json 的位置，你需要调整 analyze_predictions 或在此之前计算正确的路径
+            analysis_results = analyze_predictions(predictions_list, ground_truth_folder_path)
+
+            # 3. Generate and print report for the analysis results of *this* file
+            generate_report(model_name,analysis_results)
+        else:
+            # 如果当前文件加载失败，打印信息并跳过对这个文件的分析和报告
+            print(f"Could not load predictions from {summary_file_path}. Skipping analysis for this file.")
 
 # --- Main execution ---
 if __name__ == "__main__":
-    # Define the path to your summary.json file
-    # Assuming summary.json is in the same directory as the script
-    summary_file = 'QA_test/test/QA_test_red/deepseek-r1/summary.json'
-
-    # Prompt the user for the full path to the folder containing ground truth JSON files
-    ground_truth_folder_path = "QA_dataset/test"
-
-    # --- Workflow ---
-    # 1. Load predictions
-    predictions_list = load_predictions(summary_file)
-
-    # Only proceed if predictions were loaded successfully
-    if predictions_list:
-        # 2. Analyze predictions against ground truth
-        analysis_results = analyze_predictions(predictions_list, ground_truth_folder_path)
-
-        # 3. Generate and print report
-        generate_report(analysis_results)
-    else:
-        print("Could not load predictions. Exiting.")
+    run('configs/config9_qatest.yaml')
