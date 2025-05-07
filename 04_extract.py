@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-06 14:49:10
+# LastEditTime: 2025-05-07 02:04:00
 ## 
 import json
 import os
@@ -162,3 +162,7 @@ if __name__ == "__main__":
     N = 10  # 您希望提取的前 N 个和后 N 个文件数量
 
     run("configs/config3.yaml")
+    run("configs/config4.yaml")
+    run("configs/config5.yaml")
+    run("configs/config6.yaml")
+    run("configs/config7.yaml")

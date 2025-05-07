@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-06 13:57:11
+# LastEditTime: 2025-05-07 01:35:40
 ## 
 import json
 import re
@@ -17,7 +17,7 @@ import random
 import itertools
 
 # Setup basic logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 class DataProcessor:
@@ -402,7 +402,7 @@ class DataProcessor:
         async def bounded_process(pair):
             async with semaphore:
                 try:
-                    await asyncio.sleep(random.uniform(0, self.config['request_interval']))
+                    await asyncio.sleep(random.uniform(1, self.config['request_interval']))
                     await self.process_unit(pair, overwrite)
                 finally:
                     await update_progress()
