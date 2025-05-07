@@ -1,23 +1,10 @@
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-05-06 13:44:55
-## 
 '''
-Author: caoshiyue caoshiyueKevin@Gmail.com
-Date: 2025-04-21 07:36:12
-LastEditors: caoshiyue caoshiyueKevin@Gmail.com
-LastEditTime: 2025-05-04 02:05:19
-FilePath: /strategy4/01_label.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+Author: Likun Yang
+Date: 2025-05-07 09:18:00
+LastEditors: Likun Yang
+LastEditTime: 2025-05-07 15:26:48
+Copyright (c) 2025 by Likun Yang, All Rights Reserved. 
 '''
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-05-06 13:41:45
-## 
 import os
 import asyncio
 from utils.config import load_config  # 实现配置文件加载
@@ -27,27 +14,18 @@ from typing import Dict, Tuple, List, Any
 import random
 
 def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[Tuple[str, str]]:
-    """
-    Args:
-        file_list: 包含所有文件路径的列表。
-        num_sample: 需要抽样的文件对数量。如果为0，则返回所有可能的配对。
 
-    Returns:
-        文件对的列表，每个文件对是一个包含两个文件路径的元组。
-    """
-    if len(file_list) < 4:
-        print("文件数量少于 2，无法进行配对。")
-        return []
+    file_pairs = []
+    for item in file_list:
+        # Create a tuple with the item repeated 5 times
+        # Using tuple([item] * 5) is a concise way to create a tuple of repeated items
+        repeated_tuple = tuple([item] * 5)
+        file_pairs.append(repeated_tuple)
+    # Note: num_sample is ignored based on the described requirement of repeating each item 5 times.
+    # If sampling or pair generation was the actual goal, the logic would be different.
 
-    pairs = list(combinations(file_list, 4)) # 需要与config中的路径数量一致
-    random.shuffle(pairs)
+    return file_pairs
 
-    if num_sample > 0 and num_sample < len(pairs):
-        print(f"从 {len(pairs)} 对中抽样 {num_sample} 对进行处理。")
-        return pairs[:num_sample]
-    else:
-        print(f"将处理所有 {len(pairs)} 对文件。")
-        return pairs
 
 def find_data_files(data_dir: str) -> list:
     """获取待处理文件列表"""
@@ -59,7 +37,7 @@ async def single_process(model,config_path,**kwargs):
     config['model']=model
     processor = DataProcessor(config)
     data_files = find_data_files(config['data_dir'])
-    file_pairs=generate_file_pairs_from_list(data_files,num_sample=kwargs['num_sample'])
+    file_pairs = generate_file_pairs_from_list(data_files)
 
     await processor.run(file_pairs,overwrite=kwargs['overwrite'])
     processor.print_summary()
@@ -94,7 +72,7 @@ if __name__ == "__main__":
         # "configs/config5.yaml",
         # "configs/config6.yaml",
         # "configs/config7.yaml",
-        "configs/config8_多文件.yaml",
+        "configs/config9_qatest.yaml",
         
     ]
     asyncio.run(async_runner(models,configs,overwrite=False,num_sample=16))
