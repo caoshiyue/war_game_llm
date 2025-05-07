@@ -1,23 +1,10 @@
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-05-06 13:44:55
-## 
 '''
-Author: caoshiyue caoshiyueKevin@Gmail.com
-Date: 2025-04-21 07:36:12
-LastEditors: caoshiyue caoshiyueKevin@Gmail.com
-LastEditTime: 2025-05-04 02:05:19
-FilePath: /strategy4/01_label.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+Author: Likun Yang
+Date: 2025-05-07 09:18:00
+LastEditors: Likun Yang
+LastEditTime: 2025-05-07 09:57:01
+Copyright (c) 2025 by Likun Yang, All Rights Reserved. 
 '''
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-05-06 13:41:45
-## 
 import os
 import asyncio
 from utils.config import load_config  # 实现配置文件加载
@@ -25,7 +12,6 @@ from processor import DataProcessor
 from itertools import product,combinations
 from typing import Dict, Tuple, List, Any
 import random
-
 def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[Tuple[str, str]]:
     """
     Args:
@@ -36,7 +22,7 @@ def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[
         文件对的列表，每个文件对是一个包含两个文件路径的元组。
     """
     if len(file_list) < 4:
-        print("文件数量少于 2，无法进行配对。")
+        print("文件数量少于 4，无法进行配对。")
         return []
 
     pairs = list(combinations(file_list, 4)) # 需要与config中的路径数量一致
