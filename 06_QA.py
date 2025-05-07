@@ -2,7 +2,7 @@
 Author: Likun Yang
 Date: 2025-05-07 09:18:00
 LastEditors: Likun Yang
-LastEditTime: 2025-05-07 09:57:01
+LastEditTime: 2025-05-07 10:07:07
 Copyright (c) 2025 by Likun Yang, All Rights Reserved. 
 '''
 import os
@@ -12,6 +12,12 @@ from processor import DataProcessor
 from itertools import product,combinations
 from typing import Dict, Tuple, List, Any
 import random
+
+preference_list_path = "extract/extract_search_multi_tank_red.json"
+
+
+
+
 def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[Tuple[str, str]]:
     """
     Args:
@@ -21,6 +27,10 @@ def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[
     Returns:
         文件对的列表，每个文件对是一个包含两个文件路径的元组。
     """
+    
+    
+    
+    
     if len(file_list) < 4:
         print("文件数量少于 4，无法进行配对。")
         return []
