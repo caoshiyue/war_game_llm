@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "task": "QA_test_red",
+    "timestamp": "2025-05-06T13:52:41.428058",
+    "model": "deepseek-r1",
+    "A": 0,
+    "B": 8,
+    "C": 3,
+    "D": 5,
+    "E": 0,
+    "total": 16
+  },
+  "label": [
+    {
+      "path": "202210171618-王晓狼-美丽的鸡哥-0-0_results__202210271948-美丽的鸡哥-Rodney-0-0_results__202210271928-美丽的鸡哥-罗诗俊-0-0_results__202210271934-罗诗俊-美丽的鸡哥-0-0_results.json",
+      "answer": "D",
+      "key_output": {}
+    },
+    {
+      "path": "202210181459-大威天龙-王晓狼-0-0_results__202210181816-高骏文-李绅-0-0_results__202210232246-阿杜-小波-0-0_results__202210171638-美丽的鸡哥-王晓狼-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210222057-Colin-whao-0-0_results__202210241954-旅行者-周志阳-0-0_results__202210201432-mango-放鹰-0-0_results__202210271946-Lll-陆谱毅-0-0_results.json",
+      "answer": "D",
+      "key_output": {}
+    },
+    {
+      "path": "202210231022-科学大道的小伙子-炊烟-0-0_results__202210261844-王博方-ZZYYXX-0-0_results__202210241954-旅行者-周志阳-0-0_results__202210231245-for-Aimyousa-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210241818-sxtt-陆谱毅-0-0_results__202210181438-王晓狼-大威天龙-0-0_results__202210271928-美丽的鸡哥-罗诗俊-0-0_results__202210251854-钝边-bianweijie-0-0_results.json",
+      "answer": "D",
+      "key_output": {}
+    },
+    {
+      "path": "202210241818-sxtt-陆谱毅-0-0_results__202210222057-Colin-whao-0-0_results__202210271946-Lll-陆谱毅-0-0_results__202210231315-我想早点睡觉-手榴弹拨片-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210261903-ZZYYXX-王博方-0-0_results__202210271853-mango-放鹰-0-0_results__202210242016-周志阳-旅行者-0-0_results__202210171342-guokt-HP-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210271620-陆谱毅-美丽的鸡哥-0-0_results__202210231022-科学大道的小伙子-炊烟-0-0_results__202210261844-王博方-ZZYYXX-0-0_results__202210271847-陆谱毅-Rodney-0-0_results.json",
+      "answer": "C",
+      "key_output": {}
+    },
+    {
+      "path": "202210271620-陆谱毅-美丽的鸡哥-0-0_results__202210232226-小波-阿杜-0-0_results__202210171342-guokt-HP-0-0_results__202210271911-罗诗俊-陆谱毅-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210271620-陆谱毅-美丽的鸡哥-0-0_results__202210242016-周志阳-旅行者-0-0_results__202210222118-whao-Colin-0-0_results__202210271946-Lll-陆谱毅-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210271826-放鹰-mango-0-0_results__202210171618-王晓狼-美丽的鸡哥-0-0_results__202210281641-高骏文-水刷石-0-0_results__202210271946-Lll-陆谱毅-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210271928-美丽的鸡哥-罗诗俊-0-0_results__202210281251-大威天龙-陆谱毅-0-0_results__202210241954-旅行者-周志阳-0-0_results__202210271946-Lll-陆谱毅-0-0_results.json",
+      "answer": "C",
+      "key_output": {}
+    },
+    {
+      "path": "202210271948-美丽的鸡哥-Rodney-0-0_results__202210181459-大威天龙-王晓狼-0-0_results__202210181913-王晓狼-Rodney-0-0_results__202210201026-阿杜-小波-0-0_results.json",
+      "answer": "C",
+      "key_output": {}
+    },
+    {
+      "path": "202210271948-美丽的鸡哥-Rodney-0-0_results__202210261844-王博方-ZZYYXX-0-0_results__202210281621-水刷石-高骏文-0-0_results__202210231315-我想早点睡觉-手榴弹拨片-0-0_results.json",
+      "answer": "B",
+      "key_output": {}
+    },
+    {
+      "path": "202210272123-美丽的鸡哥-大威天龙-0-0_results__202210171342-guokt-HP-0-0_results__202210271928-美丽的鸡哥-罗诗俊-0-0_results__202210181959-王晓狼-罗诗俊-0-0_results.json",
+      "answer": "D",
+      "key_output": {}
+    },
+    {
+      "path": "202210272123-美丽的鸡哥-大威天龙-0-0_results__202210281641-高骏文-水刷石-0-0_results__202210281251-大威天龙-陆谱毅-0-0_results__202210281621-水刷石-高骏文-0-0_results.json",
+      "answer": "D",
+      "key_output": {}
+    }
+  ]
+}

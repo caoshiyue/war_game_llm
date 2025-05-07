@@ -9,8 +9,11 @@ api_params:
   temperature: 0.7
   top_p: 0.9
 data_processing:
-  "content_field_a": "analyze_0.chunks_results.0.content"  
-  "content_field_b": "analyze_0.chunks_results.0.content"  
+  file_configs:
+    - name: "contentA"  
+      path: "analyze_0.chunks_results.0.content"
+    - name: "contentB"
+      path: "analyze_0.chunks_results.0.content"
   extract_fields:
     - name: "action_A"             # 新增字段
       pattern: "<action_A>\\[?(.*?)\\]?</action_A>"
