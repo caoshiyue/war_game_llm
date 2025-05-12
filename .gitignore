@@ -5,3 +5,4 @@ api_key.py
 __pycache__/
 QA_dataset/
 QA_result/
+QA_test/
