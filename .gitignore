@@ -6,3 +6,6 @@ __pycache__/
 QA_dataset/
 QA_result/
 QA_test/
+extract/
+QA_action_psy_dataset/
+QA_action_psy_result/

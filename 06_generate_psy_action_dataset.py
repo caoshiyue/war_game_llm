@@ -1,3 +1,9 @@
+##
+# Author:  
+# Description:  
+# LastEditors: Shiyuec
+# LastEditTime: 2025-05-12 06:53:10
+## 
 '''
 Author: Likun Yang
 Date: 2025-05-07 14:26:06
@@ -33,14 +39,14 @@ def save_json(data, filepath):
     except IOError as e:
         print(f"错误：保存文件失败 {filepath}: {e}")
 
-def get_content_from_file(filename, base_dir):
+def get_content_from_file(filename, base_dir, content):
     """Reads a file from base_dir and returns its 'content' field."""
     filepath = os.path.join(base_dir, filename)
     data = load_json(filepath)
-    if data and 'content' in data:
-        return data['content']
+    if data and content in data:
+        return data[content]
     else:
-        print(f"警告：文件 {filepath} 不存在或缺少 'content' 字段。")
+        print(f"警告：文件 {filepath} 不存在或缺少 {content} 字段。")
         return None
 
 def generate_question_combinations(data):
@@ -110,13 +116,14 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
         options_data = []
         valid_combo = True
         for item in items:
-            content = get_content_from_file(item['path'], content_base_dir)
+            content = get_content_from_file(item['path'], content_base_dir,'content')
+            all_step = get_content_from_file(item['path'], content_base_dir,'all_step')
             if content is None:
                 # If content is missing for any file, skip this combination
                 valid_combo = False
                 print(f"跳过组合，因为文件 {item['path']} 的内容无法获取。")
                 break
-            options_data.append({'path': item['path'], 'content': content})
+            options_data.append({'path': item['path'], 'content': content,'all_step': all_step})
 
         if not valid_combo:
             continue # Skip to the next combination if content retrieval failed
@@ -140,6 +147,7 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
             label = option_labels[i]
             question_json["query"][f"{label}"] = option_item['content']
             question_json["meta"][f"{label}_file_path"] = option_item['path']
+            question_json["meta"][f"{label}_all_step"] = option_item['all_step']
             # Find the label corresponding to the ground truth path
             if option_item['path'] == ground_truth_path:
                 ground_truth_label = label
@@ -194,8 +202,8 @@ def run(config_path):
 
 # --- 示例使用 ---
 if __name__ == "__main__":
-    # run('configs/config9.yaml')
-    run('configs/config10.yaml')
+    run('configs/config9.yaml')
+    # run('configs/config10.yaml')
     # run('configs/config11.yaml')
     # run('configs/config12.yaml')
     # run('configs/config13.yaml')

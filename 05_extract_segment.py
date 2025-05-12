@@ -2,7 +2,7 @@
 # Author:
 # Description:
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-07 03:16:36
+# LastEditTime: 2025-05-12 07:08:22
 ##
 import json
 import os
@@ -315,7 +315,8 @@ def process_model_run(summary_path, ranked_path, n_value, config, data_dir):
             # Add data for saving individual content file
             individual_files_to_save.append({
                  "path": filename + ".json", # Use filename.json as the identifier
-                 "content": extracted_content # Only the content
+                 "content": extracted_content, # Only the content
+                 "all_step": all_step
             })
         else:
              print(f"Warning: Ranked file '{filename}' from top N not found in summary steps.")
@@ -393,7 +394,8 @@ def process_model_run(summary_path, ranked_path, n_value, config, data_dir):
             # Add data for saving individual content file
             individual_files_to_save.append({
                  "path": filename + ".json",
-                 "content": extracted_content
+                 "content": extracted_content,
+                 "all_step": all_step
             })
         # else: Warning already printed for top N if not found in summary steps
 
@@ -497,7 +499,7 @@ def run(config_path):
                           # If content is string, just write it. If it needs to be a JSON string inside, dump it.
                           # Based on example, it looks like raw text might be inside a JSON string field.
                           # Let's assume the individual file should contain JUST the string content.
-                          json.dump({'content':file_data['content']} , f, ensure_ascii=False, indent=2)
+                          json.dump({'content':file_data['content'],'all_step':file_data['all_step']} , f, ensure_ascii=False, indent=2)
 
                      # print(f"Generated content file: {output_filename}") # Too verbose?
                  except IOError:
@@ -558,5 +560,5 @@ if __name__ == "__main__":
     run("configs/config3.yaml")
     run("configs/config4.yaml")
     run("configs/config5.yaml")
-    run("configs/config6.yaml")
-    run("configs/config7.yaml")
+    # run("configs/config6.yaml")
+    # run("configs/config7.yaml")
