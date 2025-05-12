@@ -31,5 +31,6 @@ user_prompt_template: |
   对局D:
   {prompt[contentA][D]}
 
+  请你关注复盘中的坦克的位置是否深入敌后。
   {prompt[contentA][base_question]}
   

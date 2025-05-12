@@ -195,8 +195,8 @@ def run(config_path):
 # --- 示例使用 ---
 if __name__ == "__main__":
     # run('configs/config9.yaml')
-    # run('configs/config10.yaml')
+    run('configs/config10.yaml')
     # run('configs/config11.yaml')
     # run('configs/config12.yaml')
-    run('configs/config13.yaml')
+    # run('configs/config13.yaml')
 
