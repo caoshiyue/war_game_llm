@@ -1,4 +1,4 @@
-task: "multi_tank_red"
+task: "point2_red"
 model: "gpt-4o"
 max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
@@ -17,21 +17,14 @@ data_processing:
 analysis:
   min_consensus: 2
   output_dir: "analysis_results/"  # 自定义输出目录
-  descript_high: "玩家操作多个重型坦克并行向夺控点行进，坦克间距离较近。"
-  descript_low: "玩家操作多个坦克向不同方向分散前进。"
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
-user_prompt_template: |
+user_prompt_template: | #，如果在已有一个夺控点的情况下，兵力剩余不多，此时争夺另一个夺控点是高风险，反之为低风险。
   对局A:
   {prompt[contentA][A]}
 
   对局B:
   {prompt[contentA][B]}
 
-  分析以下两个复盘中玩家采取的行动和策略，并在选项中选出对复盘A分析最合适的一项。兵棋专家认为，玩家操作多个重型坦克并行向夺控点行进，坦克间距离较近是高风险。在回答的最后以++A++,++B++,++C++,++D++的形式作为答案输出，若无法判断则回答++E++:
-  A: {prompt[contentA][option_A]}
-  B: {prompt[contentA][option_B]}
-  C: {prompt[contentA][option_C]}
-  D: {prompt[contentA][option_D]}
-  
-
+  请你关注复盘中的主、次要夺控点争夺情况；
+  {prompt[contentA][base_question]}
   

@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-07 12:09:49
+# LastEditTime: 2025-05-23 09:19:27
 ## 
 import openai
 import asyncio
@@ -158,7 +158,7 @@ def openai_response_sync(**kwargs):
         completion = client_ds.chat.completions.create(timeout=120,**kwargs)
         thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
     elif kwargs.get('model').startswith("qwen") or kwargs.get('model').startswith("deepseek-v") :
-        completion = client_ds.chat.completions.create(timeout=120,**kwargs)
+        completion = client_ds.chat.completions.create(timeout=300,**kwargs)
     else:
         completion = client.chat.completions.create(timeout=120,**kwargs)
     return thinking + completion.choices[0].message.content

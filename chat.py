@@ -1,28 +1,15 @@
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-05-07 12:03:35
-## 
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-04-02 08:59:40
-## 
+# -*- coding: utf-8 -*-
+
 from response import *
 
-msg= """
-Tell me about youself
-"""
-
+msg= "tell me about you self"
 
 prompt= [{'role': 'system', 'content': msg}]
 
 response = openai_response_sync(
-    model="qwen-max-latest",
+    model="deepseek-v3",
     messages=prompt,
-    max_tokens=4000,
+    max_tokens=8000,
     temperature=0.7,
     top_p=0.9,
     frequency_penalty=0,

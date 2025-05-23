@@ -1,6 +1,7 @@
 .vscode/
 search_psy/
 old/
+data/
 api_key.py
 __pycache__/
 QA_dataset/
