@@ -1,9 +1,9 @@
-task: "runaway_red"
+task: "tank_path_red"
 model: "gpt-4o"
 max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
-output_base: "./QA_action_psy_result/"
-data_dir: "./QA_action_psy_dataset/"
+output_base: "./QA_result/"
+data_dir: "./QA_dataset/"
 N: 5
 api_params:
   max_tokens: 8000
@@ -18,13 +18,16 @@ analysis:
   min_consensus: 2
   output_dir: "analysis_results/"  # 自定义输出目录
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
-user_prompt_template: | #，如果在已有一个夺控点的情况下，兵力剩余不多，此时争夺另一个夺控点是高风险，反之为低风险。
+user_prompt_template: |
   对局A:
   {prompt[contentA][A]}
 
   对局B:
   {prompt[contentA][B]}
 
-  请你关注复盘中的主、次要夺控点争夺情况；
+  对局C:
+  {prompt[contentA][C]}
+
+  请你关注坦克的路径调整。
   {prompt[contentA][base_question]}
   

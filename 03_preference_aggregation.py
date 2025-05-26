@@ -227,9 +227,11 @@ def run(config_path):
 
 # --- 主程序入口 ---
 if __name__ == "__main__":
-    run("configs/config3.yaml")
-    run("configs/config4.yaml")
-    run("configs/config5.yaml")
-    run("configs/config6.yaml")
-    run("configs/config7.yaml")
+    run("configs/config3_label.yaml")
+    run("configs/config4_label.yaml")
+    run("configs/config5_label.yaml")
+    run("configs/config6_label.yaml")
+    #run("configs/config8_label.yaml")
+    run("configs/config9_label.yaml")
+    run("configs/config10_label.yaml")
 

@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-12 06:53:10
+# LastEditTime: 2025-05-25 05:35:52
 ## 
 '''
 Author: Likun Yang
@@ -132,7 +132,7 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
         random.shuffle(options_data)
 
         # Assign option labels and find the ground truth label
-        option_labels = ['A', 'B', 'C', 'D']
+        option_labels = ['A', 'B', 'C']
         question_json = {
                         "meta":{},
                         "query":{}
@@ -154,9 +154,9 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
 
         # Formulate the question stem based on the type of single item
         if question_type == 'first_single':
-            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最高，在回答的最后以++A++,++B++,++C++,++D++的形式作为答案，若无法判断则回答++E++。"
+            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最高，在回答的最后以++A++,++B++,++C++的形式作为答案，若无法判断则回答++E++。"
         else: # 'last_single'
-            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最低，在回答的最后以++A++,++B++,++C++,++D++的形式作为答案，若无法判断则回答++E++。"
+            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最低，在回答的最后以++A++,++B++,++C++的形式作为答案，若无法判断则回答++E++。"
 
         question_json["query"]["base_question"] = stem
         question_json["query"]["groundtruth"] = ground_truth_label
@@ -202,7 +202,10 @@ def run(config_path):
 
 # --- 示例使用 ---
 if __name__ == "__main__":
-    run('configs/config9.yaml')
+    run('configs/config3_Q1.yaml')
+    run('configs/config4_Q1.yaml')
+    run('configs/config6_Q1.yaml')
+    
     # run('configs/config10.yaml')
     # run('configs/config11.yaml')
     # run('configs/config12.yaml')

@@ -2,7 +2,7 @@
 # Author:
 # Description:
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-16 02:54:19
+# LastEditTime: 2025-05-26 02:01:27
 ##
 import json
 import os
@@ -557,8 +557,10 @@ def run(config_path):
 
 if __name__ == "__main__":
     # N and data_dir are now read from config
-    # run("configs/config3.yaml")
-    # run("configs/config4.yaml")
-    # run("configs/config6.yaml")
-    # run("configs/config6.yaml")
-    run("configs/config7.yaml")
+    run("configs/config3_label.yaml")
+    run("configs/config4_label.yaml")
+    run("configs/config5_label.yaml")
+    run("configs/config6_label.yaml")
+    #run("configs/config8_label.yaml")
+    run("configs/config9_label.yaml")
+    run("configs/config10_label.yaml")

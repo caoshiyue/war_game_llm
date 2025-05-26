@@ -20,14 +20,14 @@ analysis:
   descript_high: "玩家控制坦克大步推进前往夺控点。"
   descript_low: "玩家控制坦克多次调整路径缓步前进。"
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
-user_prompt_template: |
+user_prompt_template: | #兵棋专家认为，玩家控制坦克大步推进前往夺控点是高风险。
   对局A:
   {prompt[contentA][A]}
 
   对局B:
   {prompt[contentA][B]}
 
-  分析以下两个复盘中玩家采取的行动和策略，并在选项中选出对复盘A分析最合适的一项。兵棋专家认为，玩家控制坦克大步推进前往夺控点是高风险。在回答的最后以++A++,++B++,++C++,++D++的形式作为答案输出，若无法判断则回答++E++:
+  分析以下两个复盘中玩家采取的行动和策略，并在选项中选出对复盘A分析最合适的一项。在回答的最后以++A++,++B++,++C++,++D++的形式作为答案输出，若无法判断则回答++E++:
   A: {prompt[contentA][option_A]}
   B: {prompt[contentA][option_B]}
   C: {prompt[contentA][option_C]}

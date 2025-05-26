@@ -67,7 +67,7 @@ async def async_runner(models,configs,**kwargs):
 # "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"
 
 if __name__ == "__main__":
-    models = ["deepseek-v3", "deepseek-r1",  "qwen-max-latest"]
+    models = ["o3-mini"]
     configs = [
     'configs/config14.yaml',
     'configs/config15.yaml',
