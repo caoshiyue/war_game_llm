@@ -272,6 +272,6 @@ def run(config_path):
 
 if __name__ == "__main__":
 
-    run('configs/config14.yaml')
-    run('configs/config15.yaml')
-    run('configs/config16.yaml')
+    run('configs/config3_Q1.yaml')
+    run('configs/config4_Q1.yaml')
+    run('configs/config6_Q1.yaml')

@@ -2,8 +2,8 @@ task: "multi_tank_red"
 model: "gpt-4o"
 max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
-output_base: "./QA_result/"
-data_dir: "./QA_dataset/"
+output_base: "./Q2_result/"
+data_dir: "./Q2_dataset/"
 N: 5
 api_params:
   max_tokens: 8000

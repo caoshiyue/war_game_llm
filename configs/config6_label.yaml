@@ -32,7 +32,7 @@ analysis:
   min_consensus: 2
   output_dir: "analysis_results/"  # 自定义输出目录
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中的两个玩家的战术复盘，包括玩家方单位的所有行动。"
-user_prompt_template: |
+user_prompt_template: | # 改为 正面接敌 还是 侧翼包抄
   对局A:
   {prompt[contentA]}
 

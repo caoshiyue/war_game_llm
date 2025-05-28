@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-25 05:35:52
+# LastEditTime: 2025-05-28 07:43:02
 ## 
 '''
 Author: Likun Yang
@@ -58,7 +58,7 @@ def generate_question_combinations(data):
     # Rule 1: 1 first, 3 last
     if len(last_items) >= 3:
         for first_item in first_items:
-            for last_combo in itertools.combinations(last_items, 3):
+            for last_combo in itertools.combinations(last_items, 2):
                 combo_items = [first_item] + list(last_combo)
                 combinations.append({
                     'items': combo_items,
@@ -71,7 +71,7 @@ def generate_question_combinations(data):
     # Rule 2: 3 first, 1 last
     if len(first_items) >= 3:
         for last_item in last_items:
-            for first_combo in itertools.combinations(first_items, 3):
+            for first_combo in itertools.combinations(first_items, 2):
                 combo_items = list(first_combo) + [last_item]
                 combinations.append({
                     'items': combo_items,
@@ -202,9 +202,9 @@ def run(config_path):
 
 # --- 示例使用 ---
 if __name__ == "__main__":
-    run('configs/config3_Q1.yaml')
-    run('configs/config4_Q1.yaml')
-    run('configs/config6_Q1.yaml')
+    run('configs/config3_Q2.yaml')
+    run('configs/config4_Q2.yaml')
+    run('configs/config6_Q2.yaml')
     
     # run('configs/config10.yaml')
     # run('configs/config11.yaml')

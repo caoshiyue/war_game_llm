@@ -2,7 +2,7 @@
 # Author:
 # Description:
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-26 02:01:27
+# LastEditTime: 2025-05-28 06:11:23
 ##
 import json
 import os
@@ -561,6 +561,6 @@ if __name__ == "__main__":
     run("configs/config4_label.yaml")
     run("configs/config5_label.yaml")
     run("configs/config6_label.yaml")
-    #run("configs/config8_label.yaml")
+    run("configs/config8_label.yaml")
     run("configs/config9_label.yaml")
-    run("configs/config10_label.yaml")
+    #run("configs/config10_label.yaml")

@@ -231,7 +231,7 @@ if __name__ == "__main__":
     run("configs/config4_label.yaml")
     run("configs/config5_label.yaml")
     run("configs/config6_label.yaml")
-    #run("configs/config8_label.yaml")
+    run("configs/config8_label.yaml")
     run("configs/config9_label.yaml")
-    run("configs/config10_label.yaml")
+    #run("configs/config10_label.yaml")
 

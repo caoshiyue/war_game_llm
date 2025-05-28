@@ -4,9 +4,9 @@ old/
 data/
 api_key.py
 __pycache__/
-QA_dataset/
-QA_result/
+Q2_dataset/
+Q2_result/
 QA_test/
 extract/
-QA_action_psy_dataset/
-QA_action_psy_result/
+Q1_dataset/
+Q1_result/

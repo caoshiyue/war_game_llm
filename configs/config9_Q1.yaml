@@ -1,9 +1,9 @@
-task: "tank_path_red"
+task: "drone_red"
 model: "gpt-4o"
 max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
-output_base: "./QA_action_psy_result/"
-data_dir: "./QA_action_psy_dataset/"
+output_base: "./Q1_result/"
+data_dir: "./Q1_dataset/"
 N: 5
 api_params:
   max_tokens: 8000
@@ -17,10 +17,10 @@ data_processing:
 analysis:
   min_consensus: 2
   output_dir: "analysis_results/"  # 自定义输出目录
-  descript_high: "玩家控制坦克大步推进前往夺控点。"
-  descript_low: "玩家控制坦克多次调整路径缓步前进。"
+  descript_high: "玩家操作无人机不断改变侦查路线。"
+  descript_low: "玩家较少操作无人机。"
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
-user_prompt_template: | #兵棋专家认为，玩家控制坦克大步推进前往夺控点是高风险。
+user_prompt_template: | #兵棋专家认为，玩家操作坦克深入敌后是高风险。
   对局A:
   {prompt[contentA][A]}
 
