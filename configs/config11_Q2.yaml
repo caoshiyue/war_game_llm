@@ -1,4 +1,4 @@
-task: "fight_red"
+task: "unload_red"
 model: "gpt-4o"
 max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
@@ -28,6 +28,6 @@ user_prompt_template: |
   对局C:
   {prompt[contentA][C]}
 
-  请你关注复盘中玩家争夺夺控点的进度。
+  请你关注复盘中战车运送步兵的下车区域。
   {prompt[contentA][base_question]}
   

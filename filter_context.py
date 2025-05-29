@@ -51,9 +51,9 @@ if __name__ == "__main__":
     # 你要检索的文件夹路径
     source_folder = "data/section1"  # 请替换为你的源文件夹路径
     # 找到符合条件的文件后，要复制到的目标文件夹路径
-    destination_folder = "data/section3" # 请替换为你的目标文件夹路径
+    destination_folder = "data/section4" # 请替换为你的目标文件夹路径
     # 你要查找的特定字段 (不区分大小写)
-    search_term = "巡飞弹"
+    search_term = "无人战车"
     # 是否搜索文件内容 (True 搜索文件名和内容, False 只搜索文件名)
     search_in_content = True
     # --- 配置结束 ---

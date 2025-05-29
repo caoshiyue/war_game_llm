@@ -7,7 +7,7 @@ msg= "tell me about you self"
 prompt= [{'role': 'system', 'content': msg}]
 
 response = openai_response_sync(
-    model="deepseek-v3",
+    model="qwen-turbo",
     messages=prompt,
     max_tokens=8000,
     temperature=0.7,

@@ -42,7 +42,7 @@ def generate_question_combinations(data):
 
     # Rule AA: 2 first
     if len(first_items) >= 2:
-        for combo in itertools.combinations(first_items, 2):
+        for combo in itertools.combinations(first_items, 1):
             combinations.append({
                 'items': list(combo),
                 'first_item_source_list': 'first' # The first item in this combo is from 'first'
@@ -52,7 +52,7 @@ def generate_question_combinations(data):
 
     # Rule BB: 2 last
     if len(last_items) >= 2:
-        for combo in itertools.combinations(last_items, 2):
+        for combo in itertools.combinations(last_items, 1):
             combinations.append({
                 'items': list(combo),
                 'first_item_source_list': 'last' # The first item in this combo is from 'last'

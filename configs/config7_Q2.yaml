@@ -1,4 +1,4 @@
-task: "spy_red"
+task: "fast_observe_red"
 model: "gpt-4o"
 max_workers: 16
 request_interval: 5.0 # 请求间隔（秒）
@@ -28,6 +28,6 @@ user_prompt_template: |
   对局C:
   {prompt[contentA][C]}
 
-  请你关注复盘中的坦克的位置是否深入敌后。
+  请你关注复盘中的无人机侦查发现敌方的速度。
   {prompt[contentA][base_question]}
   
