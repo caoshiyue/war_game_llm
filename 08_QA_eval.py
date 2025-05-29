@@ -198,7 +198,9 @@ def run(config_path):
 
 # --- Main execution ---
 if __name__ == "__main__":
+    configs = [
+    
+    ]
+    for c in  configs:
+        run(c)
 
-    run('configs/config14.yaml')
-    run('configs/config15.yaml')
-    run('configs/config16.yaml')

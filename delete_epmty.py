@@ -29,7 +29,7 @@ if __name__ == "__main__":
     # 替换成你要操作的文件夹路径
     target_folder = "./" 
     # 替换成你要查找的关键词
-    search_keyword = "NBt23TwZWB3MMjbfNiSd" 
+    search_keyword = "kaB55s4dlWTyxueGhDQt" 
     # -------------------
 
     # 检查文件夹是否存在

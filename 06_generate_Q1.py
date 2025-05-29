@@ -41,24 +41,24 @@ def generate_question_combinations(data):
     combinations = []
 
     # Rule AA: 2 first
-    if len(first_items) >= 2:
-        for combo in itertools.combinations(first_items, 1):
-            combinations.append({
-                'items': list(combo),
-                'first_item_source_list': 'first' # The first item in this combo is from 'first'
-            })
-    else:
-        print("警告：'first' 列表中少于2个文件，无法生成 'AA' 类型的组合基础部分。")
+    # if len(first_items) >= 2:
+    #     for combo in itertools.combinations(first_items, 1):
+    #         combinations.append({
+    #             'items': list(combo),
+    #             'first_item_source_list': 'first' # The first item in this combo is from 'first'
+    #         })
+    # else:
+    #     print("警告：'first' 列表中少于2个文件，无法生成 'AA' 类型的组合基础部分。")
 
-    # Rule BB: 2 last
-    if len(last_items) >= 2:
-        for combo in itertools.combinations(last_items, 1):
-            combinations.append({
-                'items': list(combo),
-                'first_item_source_list': 'last' # The first item in this combo is from 'last'
-            })
-    else:
-        print("警告：'last' 列表中少于2个文件，无法生成 'BB' 类型的组合基础部分。")
+    # # Rule BB: 2 last
+    # if len(last_items) >= 2:
+    #     for combo in itertools.combinations(last_items, 1):
+    #         combinations.append({
+    #             'items': list(combo),
+    #             'first_item_source_list': 'last' # The first item in this combo is from 'last'
+    #         })
+    # else:
+    #     print("警告：'last' 列表中少于2个文件，无法生成 'BB' 类型的组合基础部分。")
 
     # Rule AB/BA: 1 first, 1 last
     if len(first_items) >= 1 and len(last_items) >= 1:
@@ -86,7 +86,7 @@ def generate_question_combinations(data):
     return combinations
 
 # Modified create_multiple_choice_dataset function
-def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir, descript_high, descript_low):
+def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir, descript_high, descript_low,character_phrases):
     """
     Creates the multiple-choice question dataset with 2-file combinations
     and new question/option format.
@@ -140,21 +140,21 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
         options_texts = []
         correct_option_text = ""
 
-        if first_item_source == 'first': # 复盘A 来自 'first' 列表 (高风险)
-            correct_option_text = f"{descript_high}高风险"
+        if first_item_source == 'first': # 复盘A 来自 'first' 列表 ({character_phrases[0]})
+            correct_option_text = f"{descript_high}{character_phrases[0]}"
             options_texts = [
                 correct_option_text,
-                f"{descript_high}低风险",
-                f"{descript_low}低风险",
-                f"{descript_low}高风险"
+                f"{descript_high}{character_phrases[1]}",
+                f"{descript_low}{character_phrases[1]}",
+                f"{descript_low}{character_phrases[0]}"
             ]
-        elif first_item_source == 'last': # 复盘A 来自 'last' 列表 (低风险)
-            correct_option_text = f"{descript_low}低风险"
+        elif first_item_source == 'last': # 复盘A 来自 'last' 列表 ({character_phrases[1]})
+            correct_option_text = f"{descript_low}{character_phrases[1]}"
             options_texts = [
                 correct_option_text,
-                f"{descript_low}高风险",
-                f"{descript_high}高风险",
-                f"{descript_high}低风险"
+                f"{descript_low}{character_phrases[0]}",
+                f"{descript_high}{character_phrases[0]}",
+                f"{descript_high}{character_phrases[1]}"
             ]
         else:
             print(f"警告：未知的 first_item_source_list '{first_item_source}'，跳过组合。")
@@ -238,6 +238,7 @@ def run(config_path):
 
     task_name = config.get('task')
     data_dir = config.get('data_dir')
+    character_phrases = config.get('analysis', {}).get('character')
     
     analysis_config = config.get('analysis')
     if not analysis_config:
@@ -259,19 +260,30 @@ def run(config_path):
     output_questions_directory = os.path.join(data_dir, task_name)
 
     print(f"开始生成题目数据集，输入文件：{input_main_data_path}，内容目录：{content_files_base_dir}，输出目录：{output_questions_directory}")
-    print(f"使用高风险描述: '{descript_high}'")
-    print(f"使用低风险描述: '{descript_low}'")
+    print(f"使用{character_phrases[0]}描述: '{descript_high}'")
+    print(f"使用{character_phrases[1]}描述: '{descript_low}'")
 
     create_multiple_choice_dataset(
         input_main_data_path, 
         content_files_base_dir, 
         output_questions_directory,
         descript_high,
-        descript_low
+        descript_low,
+        character_phrases
     )
 
 if __name__ == "__main__":
+    configs = [
+        # "configs/config3_Q1.yaml", # multi_tank_red
+        # "configs/config4_Q1.yaml", # tank_path_red
+         "configs/config5_Q1.yaml", # runaway_red
+        # "configs/config6_Q1.yaml", # tank_back_red
+        # "configs/config7_Q1.yaml", # fast_observe_red
+         "configs/config8_Q1.yaml", # missile_red
+        # "configs/config9_Q1.yaml",  # drone_red
+        # "configs/config10_Q1.yaml", # fight_red
+         "configs/config11_Q1.yaml", # unload_red
+    ]
+    for c in  configs:
+        run(c)
 
-    run('configs/config3_Q1.yaml')
-    run('configs/config4_Q1.yaml')
-    run('configs/config6_Q1.yaml')

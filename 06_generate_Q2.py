@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-28 07:43:02
+# LastEditTime: 2025-05-29 12:37:16
 ## 
 '''
 Author: Likun Yang
@@ -84,7 +84,7 @@ def generate_question_combinations(data):
 
     return combinations
 
-def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir):
+def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir, character_phrases):
     """
     Creates the multiple-choice question dataset.
 
@@ -154,9 +154,9 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
 
         # Formulate the question stem based on the type of single item
         if question_type == 'first_single':
-            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最高，在回答的最后以++A++,++B++,++C++的形式作为答案，若无法判断则回答++E++。"
+            stem = f"首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略是{character_phrases[0]}，在回答的最后以++A++,++B++,++C++的形式作为答案，若无法判断则回答++E++。"
         else: # 'last_single'
-            stem = "首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略风险最低，在回答的最后以++A++,++B++,++C++的形式作为答案，若无法判断则回答++E++。"
+            stem = f"首先，分别分析复盘中玩家对哪些单位采取了哪些行动。其次，回答哪一个对局中玩家的采取的策略是{character_phrases[1]}，在回答的最后以++A++,++B++,++C++的形式作为答案，若无法判断则回答++E++。"
 
         question_json["query"]["base_question"] = stem
         question_json["query"]["groundtruth"] = ground_truth_label
@@ -185,7 +185,8 @@ def run(config_path):
 
     task_name = config.get('task')
     data_dir = config.get('data_dir')
-
+    character_phrases = config.get('analysis', {}).get('character')
+    
     content_files_base_dir = 'extract/'+task_name
     input_main_data_path = os.path.join(content_files_base_dir,'extract_'+task_name+'.json')
 
@@ -197,17 +198,23 @@ def run(config_path):
     print(f"开始生成题目数据集，输入文件：{input_main_data_path}，内容目录：{content_files_base_dir}，输出目录：{output_questions_directory}")
 
     # 调用函数生成数据集
-    create_multiple_choice_dataset(input_main_data_path, content_files_base_dir, output_questions_directory)
+    create_multiple_choice_dataset(input_main_data_path, content_files_base_dir, output_questions_directory,character_phrases)
 
 
 # --- 示例使用 ---
 if __name__ == "__main__":
-    run('configs/config3_Q2.yaml')
-    run('configs/config4_Q2.yaml')
-    run('configs/config6_Q2.yaml')
-    
-    # run('configs/config10.yaml')
-    # run('configs/config11.yaml')
-    # run('configs/config12.yaml')
-    # run('configs/config13.yaml')
+    configs = [
+        # "configs/config3_Q2.yaml", # multi_tank_red
+        # "configs/config4_Q2.yaml", # tank_path_red
+         "configs/config5_Q2.yaml", # runaway_red
+        # "configs/config6_Q2.yaml", # tank_back_red
+        # "configs/config7_Q2.yaml", # fast_observe_red
+         "configs/config8_Q2.yaml", # missile_red
+        # "configs/config9_Q2.yaml",  # drone_red
+        # "configs/config10_Q2.yaml", # fight_red
+         "configs/config11_Q2.yaml", # unload_red
+    ]
+    for c in  configs:
+        run(c)
+
 
