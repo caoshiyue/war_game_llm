@@ -202,6 +202,7 @@ def create_multiple_choice_dataset(input_json_path, content_base_dir, output_dir
         question_json["query"]["option_D"] = options_texts[3]
         
         question_json["query"]["groundtruth"] = groundtruth_label
+        question_json["query"]["groundtruth_description"] = correct_option_text
 
         # 保存题目
         question_filename = f"question_{question_counter:06d}.json"
@@ -274,15 +275,15 @@ def run(config_path):
 
 if __name__ == "__main__":
     configs = [
-        # "configs/config3_Q1.yaml", # multi_tank_red
-        # "configs/config4_Q1.yaml", # tank_path_red
-         "configs/config5_Q1.yaml", # runaway_red
-        # "configs/config6_Q1.yaml", # tank_back_red
-        # "configs/config7_Q1.yaml", # fast_observe_red
-         "configs/config8_Q1.yaml", # missile_red
-        # "configs/config9_Q1.yaml",  # drone_red
-        # "configs/config10_Q1.yaml", # fight_red
-         "configs/config11_Q1.yaml", # unload_red
+        "configs/config3_Q1.yaml", # multi_tank_red
+        "configs/config4_Q1.yaml", # tank_path_red
+        "configs/config5_Q1.yaml", # runaway_red
+        "configs/config6_Q1.yaml", # tank_back_red
+        "configs/config7_Q1.yaml", # fast_observe_red
+        "configs/config8_Q1.yaml", # missile_red
+        "configs/config9_Q1.yaml",  # drone_red
+        "configs/config11_Q1.yaml", # unload_red
+        "configs/config12_Q1.yaml", # UGV_red
     ]
     for c in  configs:
         run(c)

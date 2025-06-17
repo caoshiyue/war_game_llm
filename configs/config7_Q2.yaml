@@ -1,5 +1,5 @@
 task: "fast_observe_red"
-max_workers: 16
+max_workers: 8
 request_interval: 5.0 # 请求间隔（秒）
 output_base: "./Q2_result/"
 data_dir: "./Q2_dataset/"
@@ -14,7 +14,7 @@ data_processing:
   extract_fields:
 analysis:
   
-  character: ["长期回报","短期回报"]
+  character: ["短期回报","长期回报"]
 system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
 user_prompt_template: |
   对局A:
@@ -26,6 +26,6 @@ user_prompt_template: |
   对局C:
   {prompt[contentA][C]}
 
-  请你关注复盘中的无人机侦查发现敌方的速度。
+  请你关注复盘中的发现敌方单位的速度。
   {prompt[contentA][base_question]}
   

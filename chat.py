@@ -2,12 +2,12 @@
 
 from response import *
 
-msg= "tell me about you self"
+msg= "测试"
 
 prompt= [{'role': 'system', 'content': msg}]
 
 response = openai_response_sync(
-    model="qwen-turbo",
+    model="qwen3-235b-a22b",
     messages=prompt,
     max_tokens=8000,
     temperature=0.7,

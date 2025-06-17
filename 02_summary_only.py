@@ -2,7 +2,7 @@
 Author: caoshiyue caoshiyueKevin@Gmail.com
 Date: 2025-04-22 09:24:12
 LastEditors: caoshiyue caoshiyueKevin@Gmail.com
-LastEditTime: 2025-05-04 04:28:44
+LastEditTime: 2025-05-30 06:28:48
 FilePath: /strategy4/04_summary_only.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -65,13 +65,13 @@ if __name__ == "__main__":
     configs = [
         # "configs/config3_label.yaml", # multi_tank_red
         # "configs/config4_label.yaml", # tank_path_red
-        "configs/config5_label.yaml", # runaway_red
+        # "configs/config5_label.yaml", # runaway_red
         # "configs/config6_label.yaml", # tank_back_red
         "configs/config7_label.yaml", # fast_observe_red
-        "configs/config8_label.yaml", # missile_red
-        "configs/config9_label.yaml",  # drone_red
-        "configs/config10_label.yaml", # fight_red
-        "configs/config11_label.yaml", # unload_red
+        # "configs/config8_label.yaml", # missile_red
+        # "configs/config9_label.yaml",  # drone_red
+        # "configs/config10_label.yaml", # fight_red
+        # "configs/config11_label.yaml", # unload_red
 
     ]
     asyncio.run(async_runner(models,configs,overwrite=False))

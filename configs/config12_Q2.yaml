@@ -1,0 +1,31 @@
+task: "UGV_red"
+max_workers: 8
+request_interval: 5.0 # 请求间隔（秒）
+output_base: "./Q2_result/"
+data_dir: "./Q2_dataset/"
+api_params:
+  max_tokens: 8000
+  temperature: 0.7
+  top_p: 0.9
+data_processing:
+  file_configs:
+    - name: "contentA"  
+      path: "query"
+  extract_fields:
+analysis:
+  
+  character: ["高风险","低风险"]
+system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
+user_prompt_template: |
+  对局A:
+  {prompt[contentA][A]}
+
+  对局B:
+  {prompt[contentA][B]}
+
+  对局C:
+  {prompt[contentA][C]}
+
+  请你关注复盘中战车运送步兵的下车区域。
+  {prompt[contentA][base_question]}
+  

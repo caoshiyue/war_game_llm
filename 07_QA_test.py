@@ -1,8 +1,8 @@
 '''
 Author: Likun Yang
 Date: 2025-05-07 09:18:00
-LastEditors: Likun Yang
-LastEditTime: 2025-05-07 17:11:04
+LastEditors: caoshiyue caoshiyueKevin@Gmail.com
+LastEditTime: 2025-05-30 08:15:09
 Copyright (c) 2025 by Likun Yang, All Rights Reserved. 
 '''
 import os
@@ -54,7 +54,7 @@ async def async_runner(models,configs,**kwargs):
     ]
     
     # 使用信号量控制并发度（根据系统资源调整）
-    semaphore = asyncio.Semaphore(8)  # 同时最多运行4个任务
+    semaphore = asyncio.Semaphore(2)  # 同时最多运行4个任务
     
     async def sem_task(task):
         async with semaphore:
@@ -64,16 +64,34 @@ async def async_runner(models,configs,**kwargs):
     await asyncio.gather(*(sem_task(t) for t in tasks))
 
 
-# "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"
+# "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen3-235b-a22b"
 
 if __name__ == "__main__":
-    models = ["o3-mini"]
+    models = ["deepseek-v3", "deepseek-r1",   "qwen3-235b-a22b"]
     configs = [
-    'configs/config14.yaml',
-    'configs/config15.yaml',
-    'configs/config16.yaml',
+        "configs/config3_Q2.yaml", # multi_tank_red
+        "configs/config4_Q2.yaml", # tank_path_red
+        "configs/config5_Q2.yaml", # runaway_red
+        "configs/config6_Q2.yaml", # tank_back_red
+
+        "configs/config8_Q2.yaml", # missile_red
+        "configs/config9_Q2.yaml",  # drone_red
+
+        "configs/config11_Q2.yaml", # unload_red
+        "configs/config12_Q2.yaml", # UGV_red
+
+        "configs/config3_Q1.yaml", # multi_tank_red
+        "configs/config4_Q1.yaml", # tank_path_red
+        "configs/config5_Q1.yaml", # runaway_red
+        "configs/config6_Q1.yaml", # tank_back_red
+
+        "configs/config8_Q1.yaml", # missile_red
+        "configs/config9_Q1.yaml",  # drone_red
+
+        "configs/config11_Q1.yaml", # unload_red
+        "configs/config12_Q1.yaml", # UGV_red
         
     ]
-    asyncio.run(async_runner(models,configs,overwrite=True,num_sample=0))
+    asyncio.run(async_runner(models,configs,overwrite=False,num_sample=0))
     #asyncio.run(single_process("gpt-4o","configs/config1.yaml"))
 

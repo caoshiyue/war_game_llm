@@ -199,7 +199,27 @@ def run(config_path):
 # --- Main execution ---
 if __name__ == "__main__":
     configs = [
-    
+        "configs/config3_Q2.yaml", # multi_tank_red
+        "configs/config4_Q2.yaml", # tank_path_red
+        "configs/config5_Q2.yaml", # runaway_red
+        "configs/config6_Q2.yaml", # tank_back_red
+         "configs/config7_Q2.yaml", # fast_observe_red
+        "configs/config8_Q2.yaml", # missile_red
+        "configs/config9_Q2.yaml",  # drone_red
+        "configs/config10_Q2.yaml", # fight_red
+        "configs/config11_Q2.yaml", # unload_red
+        "configs/config12_Q2.yaml", # UGV_red
+
+        "configs/config3_Q1.yaml", # multi_tank_red
+        "configs/config4_Q1.yaml", # tank_path_red
+        "configs/config5_Q1.yaml", # runaway_red
+        "configs/config6_Q1.yaml", # tank_back_red
+         "configs/config7_Q1.yaml", # fast_observe_red
+        "configs/config8_Q1.yaml", # missile_red
+        "configs/config9_Q1.yaml",  # drone_red
+        "configs/config10_Q1.yaml", # fight_red
+        "configs/config11_Q1.yaml", # unload_red
+        "configs/config12_Q1.yaml", # UGV_red
     ]
     for c in  configs:
         run(c)

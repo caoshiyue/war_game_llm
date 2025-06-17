@@ -1,5 +1,5 @@
 task: "tank_back_red"
-max_workers: 16
+max_workers: 8
 request_interval: 5.0 # 请求间隔（秒）
 output_base: "./Q1_result/"
 data_dir: "./Q1_dataset/"

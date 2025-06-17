@@ -230,13 +230,14 @@ if __name__ == "__main__":
     configs = [
         # "configs/config3_label.yaml", # multi_tank_red
         # "configs/config4_label.yaml", # tank_path_red
-        "configs/config5_label.yaml", # runaway_red
+        # "configs/config5_label.yaml", # runaway_red
         # "configs/config6_label.yaml", # tank_back_red
         "configs/config7_label.yaml", # fast_observe_red
-        "configs/config8_label.yaml", # missile_red
-        "configs/config9_label.yaml",  # drone_red
-        "configs/config10_label.yaml", # fight_red
-        "configs/config11_label.yaml", # unload_red
+        # "configs/config8_label.yaml", # missile_red
+        # "configs/config9_label.yaml",  # drone_red
+        # "configs/config10_label.yaml", # fight_red
+        # "configs/config11_label.yaml", # unload_red
+        # "configs/config12_label.yaml", # UGV_red
     ]
     for c in  configs:
         run(c)
