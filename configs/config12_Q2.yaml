@@ -26,6 +26,6 @@ user_prompt_template: |
   对局C:
   {prompt[contentA][C]}
 
-  请你关注复盘中战车运送步兵的下车区域。
+  请你关注复盘中无人车的操作。
   {prompt[contentA][base_question]}
   

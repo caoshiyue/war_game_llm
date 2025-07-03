@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-05-30 02:10:36
+# LastEditTime: 2025-07-03 08:33:22
 ## 
 import openai
 import asyncio
@@ -39,11 +39,24 @@ client_o1 = openai.OpenAI(
     api_key=o1_key
 )
 
+client_o3 = openai.OpenAI(
+    base_url=url,
+    # sk-xxx替换为自己的key
+    api_key=o3_key
+)
+
 aclient_o1 = openai.AsyncOpenAI(
     base_url=url,
     # sk-xxx替换为自己的key
     api_key=o1_key
 )
+
+aclient_o3 = openai.AsyncOpenAI(
+    base_url=url,
+    # sk-xxx替换为自己的key
+    api_key=o3_key
+)
+
 
 client_ds = openai.OpenAI(
     base_url=ds_url,
@@ -112,7 +125,7 @@ async def openai_response_async(**kwargs):
         try:
             #completion = await aclient.chat.completions.create(timeout=30,**kwargs)
             aclient_i = random.choice(api_instances)
-            if kwargs.get('model').startswith("o"):
+            if kwargs.get('model').startswith("o1"):
                 kwargs['messages'] = [
                     {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
                     for msg in kwargs['messages']
@@ -122,6 +135,16 @@ async def openai_response_async(**kwargs):
                 if 'top_p' in kwargs:
                     kwargs.pop('top_p')
                 completion = await asyncio.wait_for(aclient_o1.chat.completions.create(**kwargs), timeout=120)
+            elif kwargs.get('model').startswith("o3"):
+                kwargs['messages'] = [
+                    {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
+                    for msg in kwargs['messages']
+                ]
+                kwargs['temperature'] =1
+                kwargs['max_tokens'] =8000
+                if 'top_p' in kwargs:
+                    kwargs.pop('top_p')
+                completion = await asyncio.wait_for(aclient_o3.chat.completions.create(**kwargs), timeout=120)
             elif kwargs.get('model').startswith("deepseek-r"):
                 completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=300)
                 thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
@@ -156,12 +179,12 @@ async def openai_response_async(**kwargs):
             print(f"API retry {retries}")
             #traceback.print_exc()  # 打印栈跟踪
             retries += 1
-            time.sleep(random.uniform(2, 3))
+            await asyncio.sleep(random.uniform(2, 3))
 
 @retry(max_retries=5, delay=2, exceptions=(Exception,))
 def openai_response_sync(**kwargs):
     thinking=""
-    if kwargs.get('model').startswith("o"):
+    if kwargs.get('model').startswith("o1"):
         kwargs['messages'] = [
             {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
             for msg in kwargs['messages']
@@ -171,6 +194,16 @@ def openai_response_sync(**kwargs):
         if 'top_p' in kwargs:
             kwargs.pop('top_p')
         completion = client_o1.chat.completions.create(timeout=120,**kwargs)
+    elif kwargs.get('model').startswith("o3"):
+        kwargs['messages'] = [
+            {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
+            for msg in kwargs['messages']
+        ]
+        kwargs['temperature'] =1
+        kwargs['max_tokens'] =8000
+        if 'top_p' in kwargs:
+            kwargs.pop('top_p')
+        completion = client_o3.chat.completions.create(timeout=120,**kwargs)
     elif kwargs.get('model').startswith("deepseek-r"):
         completion = client_ds.chat.completions.create(timeout=180,**kwargs)
         thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
