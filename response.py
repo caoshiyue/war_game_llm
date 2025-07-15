@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-07-03 08:33:22
+# LastEditTime: 2025-07-04 10:38:42
 ## 
 import openai
 import asyncio
@@ -68,6 +68,18 @@ aclient_ds = openai.AsyncOpenAI(
     base_url=ds_url,
     # sk-xxx替换为自己的key
     api_key=ds_key
+)
+
+client_os = openai.OpenAI(
+    base_url=openrouter_url,
+    # sk-xxx替换为自己的key
+    api_key=openrouter_key
+)
+
+aclient_os = openai.AsyncOpenAI(
+    base_url=openrouter_url,
+    # sk-xxx替换为自己的key
+    api_key=openrouter_key
 )
 
 
@@ -168,6 +180,8 @@ async def openai_response_async(**kwargs):
                     if hasattr(delta, "content") and delta.content:
                         answer_content += delta.content
                 return "<Thinking>" + reasoning_content +"</Thinking>\n" +answer_content
+            elif kwargs.get('model').startswith("klusterai") or kwargs.get('model').startswith("mistralai"):
+                completion = await asyncio.wait_for(aclient_os.chat.completions.create(**kwargs), timeout=120)
             else:
                 completion = await asyncio.wait_for(aclient.chat.completions.create(**kwargs), timeout=120)
             return thinking + completion.choices[0].message.content
@@ -227,6 +241,8 @@ def openai_response_sync(**kwargs):
             if hasattr(delta, "content") and delta.content:
                 answer_content += delta.content
         return "<Thinking>" + reasoning_content +"</Thinking>\n" +answer_content
+    elif kwargs.get('model').startswith("klusterai") or kwargs.get('model').startswith("mistralai") or kwargs.get('model').startswith("google"):
+                completion = client_os.chat.completions.create(**kwargs)
     else:
         completion = client.chat.completions.create(timeout=120,**kwargs)
     return thinking + completion.choices[0].message.content
