@@ -1,0 +1,33 @@
+task: "fight_red"
+max_workers: 8
+request_interval: 5.0 # 请求间隔（秒）
+output_base: "./Q1_result/"
+data_dir: "./Q1_dataset/"
+api_params:
+  max_tokens: 8000
+  temperature: 0.7
+  top_p: 0.9
+data_processing:
+  file_configs:
+    - name: "contentA"  
+      path: "query"
+  extract_fields:
+analysis:
+  
+  character: ["长期回报","短期回报"]
+  descript_high: "玩家没有着急向夺控点行进，剩余兵力较多。"
+  descript_low: "玩家向夺控点行进造成了较大损失。"
+system_prompt: "你是一个军事策略分析专家，下面是陆战兵棋夺控战（以争夺关键地域或目标为核心任务的战术推演想定）中玩家的战术复盘，包括玩家方单位的所有行动。"
+user_prompt_template: | #兵棋专家认为，玩家操作坦克深入敌后是高风险。
+  对局A:
+  {prompt[contentA][A]}
+
+  对局B:
+  {prompt[contentA][B]}
+
+  分析以下两个复盘中玩家采取的行动和策略，并在选项中选出对复盘A分析最合适的一项。在回答的最后以++A++,++B++,++C++,++D++的形式作为答案输出，若无法判断则回答++E++:
+  A: {prompt[contentA][option_A]}
+  B: {prompt[contentA][option_B]}
+  C: {prompt[contentA][option_C]}
+  D: {prompt[contentA][option_D]}
+  

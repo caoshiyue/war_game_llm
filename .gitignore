@@ -1,5 +1,12 @@
-*.json
 .vscode/
-old_result/
+search_psy/
+old/
 data/
 api_key.py
+__pycache__/
+Q2_dataset/
+Q2_result/
+QA_test/
+extract/
+Q1_dataset/
+Q1_result/

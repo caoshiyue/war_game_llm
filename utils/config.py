@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-07 07:56:41
+# LastEditTime: 2025-05-29 07:35:34
 ## 
 import yaml
 from pathlib import Path
@@ -14,7 +14,7 @@ def load_config(config_path: str) -> dict:
             config = yaml.safe_load(f)
         
         # 配置验证
-        required_keys = ['model', 'max_workers', 'output_base','data_dir','request_interval']
+        required_keys = [ 'max_workers', 'output_base','data_dir','request_interval']
         for key in required_keys:
             if key not in config:
                 raise ValueError(f"Missing required config key: {key}")

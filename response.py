@@ -2,7 +2,7 @@
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-09 14:58:57
+# LastEditTime: 2025-07-04 10:38:42
 ## 
 import openai
 import asyncio
@@ -39,11 +39,24 @@ client_o1 = openai.OpenAI(
     api_key=o1_key
 )
 
+client_o3 = openai.OpenAI(
+    base_url=url,
+    # sk-xxx替换为自己的key
+    api_key=o3_key
+)
+
 aclient_o1 = openai.AsyncOpenAI(
     base_url=url,
     # sk-xxx替换为自己的key
     api_key=o1_key
 )
+
+aclient_o3 = openai.AsyncOpenAI(
+    base_url=url,
+    # sk-xxx替换为自己的key
+    api_key=o3_key
+)
+
 
 client_ds = openai.OpenAI(
     base_url=ds_url,
@@ -55,6 +68,18 @@ aclient_ds = openai.AsyncOpenAI(
     base_url=ds_url,
     # sk-xxx替换为自己的key
     api_key=ds_key
+)
+
+client_os = openai.OpenAI(
+    base_url=openrouter_url,
+    # sk-xxx替换为自己的key
+    api_key=openrouter_key
+)
+
+aclient_os = openai.AsyncOpenAI(
+    base_url=openrouter_url,
+    # sk-xxx替换为自己的key
+    api_key=openrouter_key
 )
 
 
@@ -108,30 +133,57 @@ async def openai_response_async(**kwargs):
 
     # 修改 kwargs 中的 messages，将 role 为 'system' 改为 'user'
     thinking=""
-    while retries < 3: #! 注意，外部还需要再次retry
+    while retries < 2: #! 注意，外部还需要再次retry
         try:
             #completion = await aclient.chat.completions.create(timeout=30,**kwargs)
             aclient_i = random.choice(api_instances)
-            if kwargs.get('model').startswith("o"):
+            if kwargs.get('model').startswith("o1"):
                 kwargs['messages'] = [
                     {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
                     for msg in kwargs['messages']
-                ]
-                kwargs['messages'] += [
-                    {'role': 'user', 'content':'Answers need to be less than 1000 words.'} 
                 ]
                 kwargs['temperature'] =1
                 kwargs['max_tokens'] =8000
                 if 'top_p' in kwargs:
                     kwargs.pop('top_p')
-                completion = await asyncio.wait_for(aclient_o1.chat.completions.create(**kwargs), timeout=60)
+                completion = await asyncio.wait_for(aclient_o1.chat.completions.create(**kwargs), timeout=120)
+            elif kwargs.get('model').startswith("o3"):
+                kwargs['messages'] = [
+                    {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
+                    for msg in kwargs['messages']
+                ]
+                kwargs['temperature'] =1
+                kwargs['max_tokens'] =8000
+                if 'top_p' in kwargs:
+                    kwargs.pop('top_p')
+                completion = await asyncio.wait_for(aclient_o3.chat.completions.create(**kwargs), timeout=120)
             elif kwargs.get('model').startswith("deepseek-r"):
-                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=120)
+                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=300)
                 thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
-            elif kwargs.get('model').startswith("qwen") or kwargs.get('model').startswith("deepseek-v") :
+            elif kwargs.get('model').startswith("deepseek-v") :
+                completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=120)
+            elif kwargs.get('model').startswith("qwen3"):
+                kwargs['extra_body'] ={
+                                        "enable_thinking": True,
+                                        "thinking_budget": 16000
+                                        }
+                kwargs['stream'] = True
                 completion = await asyncio.wait_for(aclient_ds.chat.completions.create(**kwargs), timeout=30)
+                reasoning_content = ""  # 完整思考过程
+                answer_content = ""  # 完整回复
+                async for chunk in completion:
+                    if not chunk.choices:
+                        continue
+                    delta = chunk.choices[0].delta
+                    if hasattr(delta, "reasoning_content") and delta.reasoning_content is not None:
+                        reasoning_content += delta.reasoning_content
+                    if hasattr(delta, "content") and delta.content:
+                        answer_content += delta.content
+                return "<Thinking>" + reasoning_content +"</Thinking>\n" +answer_content
+            elif kwargs.get('model').startswith("klusterai") or kwargs.get('model').startswith("mistralai"):
+                completion = await asyncio.wait_for(aclient_os.chat.completions.create(**kwargs), timeout=120)
             else:
-                completion = await asyncio.wait_for(aclient.chat.completions.create(**kwargs), timeout=30)
+                completion = await asyncio.wait_for(aclient.chat.completions.create(**kwargs), timeout=120)
             return thinking + completion.choices[0].message.content
 
 
@@ -141,31 +193,58 @@ async def openai_response_async(**kwargs):
             print(f"API retry {retries}")
             #traceback.print_exc()  # 打印栈跟踪
             retries += 1
-            time.sleep(random.uniform(2, 3))
+            await asyncio.sleep(random.uniform(2, 3))
 
 @retry(max_retries=5, delay=2, exceptions=(Exception,))
 def openai_response_sync(**kwargs):
     thinking=""
-    if kwargs.get('model').startswith("o"):
+    if kwargs.get('model').startswith("o1"):
         kwargs['messages'] = [
             {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
             for msg in kwargs['messages']
-        ]
-        kwargs['messages'] += [
-            {'role': 'user', 'content':'Answers need to be less than 1000 words.'} 
         ]
         kwargs['temperature'] =1
         kwargs['max_tokens'] =8000
         if 'top_p' in kwargs:
             kwargs.pop('top_p')
-        completion = client_o1.chat.completions.create(timeout=60,**kwargs)
+        completion = client_o1.chat.completions.create(timeout=120,**kwargs)
+    elif kwargs.get('model').startswith("o3"):
+        kwargs['messages'] = [
+            {**msg, 'role': 'user'} if msg.get('role') == 'system' else msg
+            for msg in kwargs['messages']
+        ]
+        kwargs['temperature'] =1
+        kwargs['max_tokens'] =8000
+        if 'top_p' in kwargs:
+            kwargs.pop('top_p')
+        completion = client_o3.chat.completions.create(timeout=120,**kwargs)
     elif kwargs.get('model').startswith("deepseek-r"):
-        completion = client_ds.chat.completions.create(timeout=120,**kwargs)
+        completion = client_ds.chat.completions.create(timeout=180,**kwargs)
         thinking ="<Thinking>" + completion.choices[0].message.model_extra['reasoning_content'] +"</Thinking>\n"
-    elif kwargs.get('model').startswith("qwen") or kwargs.get('model').startswith("deepseek-v") :
+    elif  kwargs.get('model').startswith("deepseek-v") :
+        completion = client_ds.chat.completions.create(timeout=120,**kwargs)
+    elif kwargs.get('model').startswith("qwen3"):
+        kwargs['extra_body'] ={
+                                "enable_thinking": True,
+                                "thinking_budget": 16000
+                                }
+        kwargs['stream'] = True
         completion = client_ds.chat.completions.create(timeout=30,**kwargs)
+        reasoning_content = ""  # 完整思考过程
+        answer_content = ""  # 完整回复
+        for chunk in completion:
+            if not chunk.choices:
+                continue
+            delta = chunk.choices[0].delta
+            if hasattr(delta, "reasoning_content") and delta.reasoning_content is not None:
+                reasoning_content += delta.reasoning_content
+            if hasattr(delta, "content") and delta.content:
+                answer_content += delta.content
+        return "<Thinking>" + reasoning_content +"</Thinking>\n" +answer_content
+    elif kwargs.get('model').startswith("klusterai") or kwargs.get('model').startswith("mistralai") or kwargs.get('model').startswith("google"):
+                completion = client_os.chat.completions.create(**kwargs)
     else:
-        completion = client.chat.completions.create(timeout=30,**kwargs)
+        completion = client.chat.completions.create(timeout=120,**kwargs)
     return thinking + completion.choices[0].message.content
 
 

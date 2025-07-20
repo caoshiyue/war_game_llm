@@ -1,0 +1,106 @@
+'''
+Author: caoshiyue caoshiyueKevin@Gmail.com
+Date: 2025-04-21 07:36:12
+LastEditors: caoshiyue caoshiyueKevin@Gmail.com
+LastEditTime: 2025-05-04 02:05:19
+FilePath: /strategy4/01_label.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
+##
+# Author:  
+# Description:  
+# LastEditors: Shiyuec
+# LastEditTime: 2025-05-30 02:56:56
+## 
+import os
+import asyncio
+from utils.config import load_config  # 实现配置文件加载
+from processor import DataProcessor
+from itertools import product,combinations,permutations 
+from typing import Dict, Tuple, List, Any
+import random
+
+def generate_file_pairs_from_list(file_list: list, num_sample: int = 0) -> List[Tuple[str, str]]:
+    """
+    从文件列表中生成所有可能的无序文件对，并可选地进行抽样。
+
+    Args:
+        file_list: 包含所有文件路径的列表。
+        num_sample: 需要抽样的文件对数量。如果为0，则返回所有可能的配对。
+
+    Returns:
+        文件对的列表，每个文件对是一个包含两个文件路径的元组。
+    """
+    if len(file_list) < 2:
+        print("文件数量少于 2，无法进行配对。")
+        return []
+
+    # 使用 permutations(list, r) 生成长度为 r 的有序排列
+    # permutations(file_list, 2) 会生成所有 (file_i, file_j) 的有序对，其中 i != j
+    pairs = list(permutations(file_list, 2)) 
+    
+    # 随机打乱顺序，对于抽样或随机处理比较顺序很有用
+    random.shuffle(pairs)
+
+    if num_sample > 0 and num_sample < len(pairs):
+        print(f"从 {len(pairs)} 对中抽样 {num_sample} 对进行处理。")
+        return pairs[:num_sample]
+    else:
+        print(f"将处理所有 {len(pairs)} 对文件。")
+        return pairs
+
+
+def find_data_files(data_dir: str) -> list:
+    """获取待处理文件列表"""
+    return [os.path.join(data_dir, f) for f in os.listdir(data_dir) 
+           if f.endswith('.json')]
+
+async def single_process(model,config_path,**kwargs):
+    config = load_config(config_path)
+    config['model']=model
+    processor = DataProcessor(config)
+    data_files = find_data_files(config['data_dir'])
+    file_pairs=generate_file_pairs_from_list(data_files,num_sample=kwargs['num_sample'])
+
+    await processor.run(file_pairs,overwrite=kwargs['overwrite'])
+    processor.print_summary()
+
+async def async_runner(models,configs,**kwargs):
+    """异步任务调度器"""
+   
+    # 创建所有任务组合
+    tasks = [
+        single_process(model, config,**kwargs)
+        for model, config in product(models, configs)
+    ]
+    
+    # 使用信号量控制并发度（根据系统资源调整）
+    semaphore = asyncio.Semaphore(4)  # 同时最多运行4个任务
+    
+    async def sem_task(task):
+        async with semaphore:
+            return await task
+    
+    # 并行执行所有任务
+    await asyncio.gather(*(sem_task(t) for t in tasks))
+
+
+# "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"
+
+if __name__ == "__main__":
+    models = ["deepseek-r1",]
+    configs = [
+        # "configs/config3_label.yaml", # multi_tank_red
+        # "configs/config4_label.yaml", # tank_path_red
+        # "configs/config5_label.yaml", # runaway_red
+        # "configs/config6_label.yaml", # tank_back_red
+        "configs/config7_label.yaml", # fast_observe_red
+        # "configs/config8_label.yaml", # missile_red
+        # "configs/config9_label.yaml",  # drone_red
+        # "configs/config10_label.yaml", # fight_red
+        # "configs/config11_label.yaml", # unload_red
+        # "configs/config12_label.yaml", # UGV_red
+    ]
+    asyncio.run(async_runner(models,configs,overwrite=False,num_sample=240))
+    #asyncio.run(single_process("gpt-4o","configs/config1.yaml"))
+

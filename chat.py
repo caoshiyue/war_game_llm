@@ -1,28 +1,18 @@
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-04-09 06:40:24
-## 
-##
-# Author:  
-# Description:  
-# LastEditors: Shiyuec
-# LastEditTime: 2025-04-02 08:59:40
-## 
+# -*- coding: utf-8 -*-
+
 from response import *
 
-msg= """
-Tell me about youself
-"""
 
+msg= "what is your name" #你的模型名称是什么？
 
-prompt= [{'role': 'system', 'content': msg}]
+prompt= [{'role': 'system', 'content': msg},
+         {'role': 'user', 'content': " "} #有些模型不能没有user
+         ]
 
 response = openai_response_sync(
-    model="deepseek-r1",
+    model="google/gemma-3-27b-it",
     messages=prompt,
-    max_tokens=4000,
+    max_tokens=1000,
     temperature=0.7,
     top_p=0.9,
     frequency_penalty=0,

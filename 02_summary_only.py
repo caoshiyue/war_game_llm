@@ -1,8 +1,22 @@
+'''
+Author: caoshiyue caoshiyueKevin@Gmail.com
+Date: 2025-04-22 09:24:12
+LastEditors: caoshiyue caoshiyueKevin@Gmail.com
+LastEditTime: 2025-05-30 06:28:48
+FilePath: /strategy4/04_summary_only.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 ##
 # Author:  
 # Description:  
 # LastEditors: Shiyuec
-# LastEditTime: 2025-04-11 02:31:47
+# LastEditTime: 2025-05-29 09:06:02
+## 
+##
+# Author:  
+# Description:  
+# LastEditors: Shiyuec
+# LastEditTime: 2025-04-22 09:21:20
 ## 
 import os
 import asyncio
@@ -21,7 +35,7 @@ async def single_process(model,config_path,overwrite=True):
     processor = DataProcessor(config)
     
     data_files = find_data_files(config['data_dir'])
-    await processor.run(data_files,overwrite)
+    await processor.generate_summary()
     processor.print_summary()
 
 async def async_runner(models,configs,overwrite):
@@ -34,7 +48,7 @@ async def async_runner(models,configs,overwrite):
     ]
     
     # 使用信号量控制并发度（根据系统资源调整）
-    semaphore = asyncio.Semaphore(10)  # 同时最多运行4个任务
+    semaphore = asyncio.Semaphore(32)  # 同时最多运行4个任务
     
     async def sem_task(task):
         async with semaphore:
@@ -47,14 +61,18 @@ async def async_runner(models,configs,overwrite):
 # "deepseek-v3", "deepseek-r1", "gpt-4o", "o3-mini", "qwen-max-latest"
 
 if __name__ == "__main__":
-    models = [ "deepseek-v3", "deepseek-r1", "o3-mini", "qwen-max-latest"]
+    models = [ "deepseek-r1",]
     configs = [
-        "configs/config5.yaml",
-        "configs/config6.yaml",
-        "configs/config7.yaml",
-        "configs/config8.yaml",
-        "configs/config9.yaml",
-        "configs/config10.yaml"
+        # "configs/config3_label.yaml", # multi_tank_red
+        # "configs/config4_label.yaml", # tank_path_red
+        # "configs/config5_label.yaml", # runaway_red
+        # "configs/config6_label.yaml", # tank_back_red
+        "configs/config7_label.yaml", # fast_observe_red
+        # "configs/config8_label.yaml", # missile_red
+        # "configs/config9_label.yaml",  # drone_red
+        # "configs/config10_label.yaml", # fight_red
+        # "configs/config11_label.yaml", # unload_red
+
     ]
     asyncio.run(async_runner(models,configs,overwrite=False))
     #asyncio.run(single_process("gpt-4o","configs/config1.yaml"))
